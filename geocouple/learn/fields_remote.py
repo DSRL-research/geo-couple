@@ -18,8 +18,8 @@ _LOG = logging.getLogger(__name__)
 
 from geocouple import PROJECT_ROOT
 from geocouple.learn import dataset as ds
+from geocouple.workers import config as wconfig
 
-TORCH_PATH = "/usr/local/lib/python3.12/dist-packages"  # torch 2.7 (CPU folosit) instalat de administrator pe server
 
 
 def jobs(run: Path, version: str = "v2") -> list[Path]:
@@ -50,7 +50,7 @@ def jobs(run: Path, version: str = "v2") -> list[Path]:
                                                      "val_every") if k in fc}, "seed": cfg["seed"]})
     out = []
     for sp in specs:
-        sp.update(data_root=cfg["data_root"], torch_path=TORCH_PATH, run=run.name, version=version)
+        sp.update(data_root=cfg["data_root"], torch_path=wconfig.load()["torch_path"], run=run.name, version=version)
         key = hashlib.sha256(json.dumps(sp, sort_keys=True).encode()).hexdigest()[:16]
         d = LOCAL / "outbox" / f"p3-{key}"
         oracle = sp["mode"] == "oracle"

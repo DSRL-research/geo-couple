@@ -22,7 +22,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from geocouple import PROJECT_ROOT, REPORTS_DIR
+from geocouple import DOWNSTREAM_ROOT, PROJECT_ROOT, REPORTS_DIR
 from geocouple.data.build import PipelineSpec
 from geocouple.data.sampling import sample_family
 from geocouple.data.simulate import run_sample
@@ -32,7 +32,7 @@ from geocouple.graph.coupling import CouplingSpec
 from geocouple.physics.fast import run_fastcap, run_fasthenry
 from geocouple.stack import load_stack
 
-DOWNSTREAM = Path.home() / "work" / "demo_circuit"
+DOWNSTREAM = DOWNSTREAM_ROOT
 _LOG = logging.getLogger(__name__)
 
 

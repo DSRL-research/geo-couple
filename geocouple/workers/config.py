@@ -16,6 +16,7 @@ DEFAULTS = {
     "ssh_opts": ["-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ServerAliveInterval=30"],
     "remote_root": "geo-couple",          # relative to the remote home
     "tmux_session": "geocouple-worker",
+    "torch_path": None,                    # extra sys.path entry for jobs on the server (torch outside the venv)
     "worker": {                            # shared-server etiquette, read by the daemon on the server
         "max_cores_frac": 0.5,             # never more than this fraction of the cores ...
         "reserve_cores": 2,                # ... nor more than (cores - others' load - reserve)

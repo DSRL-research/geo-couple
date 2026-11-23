@@ -1,13 +1,12 @@
 """The built-in Surrogate reproduces the downstream `circuit_ml` Surrogate exactly (B1, local GP of S0 / G1 / A1)."""
 
-import os
 import sys
-from pathlib import Path
 
 import numpy as np
 import pytest
 
 pytest.importorskip("sklearn")
+from geocouple import DOWNSTREAM_ROOT  # noqa: E402
 from geocouple.learn.surrogate import Surrogate  # noqa: E402
 
 
@@ -33,7 +32,7 @@ def test_rejects_unknown_model():
 
 
 def _downstream():
-    root = Path(os.environ.get("GEOCOUPLE_DOWNSTREAM", Path.home() / "work" / "demo_circuit"))
+    root = DOWNSTREAM_ROOT
     if root.is_dir() and str(root) not in sys.path:
         sys.path.insert(0, str(root))
     try:

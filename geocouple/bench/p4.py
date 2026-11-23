@@ -21,12 +21,12 @@ import yaml
 
 from geocouple import PROJECT_ROOT
 from geocouple.learn import dataset as ds
+from geocouple.workers import config as wconfig
 
 _LOG = logging.getLogger(__name__)
 
 RUNS = PROJECT_ROOT / "runs" / "p4_composition"
 CONFIG = PROJECT_ROOT / "configs" / "experiments" / "p4_composition.yaml"
-TORCH_PATH = "/usr/local/lib/python3.12/dist-packages"
 
 
 def log(msg):
@@ -61,7 +61,8 @@ def init() -> Path:
 
 def _spec(cfg: dict, name: str, run: Path) -> dict:
     v = {"thr_w": cfg["default_thr_w"], **cfg["variants"][name]}
-    return {"variant": v, "name": name, "seeds": cfg["seeds"], "train": cfg["train"], "torch_path": TORCH_PATH,
+    return {"variant": v, "name": name, "seeds": cfg["seeds"], "train": cfg["train"],
+            "torch_path": wconfig.load()["torch_path"],
             "run": run.name}
 
 

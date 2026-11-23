@@ -6,7 +6,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 read -r HOST ROOT < <(.venv/bin/python -c "from geocouple.workers import config as c; k=c.load(); print(k['ssh_host'], k['remote_root'])")
-ONELAB="${ONELAB_ROOT:-$HOME/work/onelab-Linux64real}"
+ONELAB="$(readlink -f "${ONELAB_ROOT:-third_party/onelab}")"   # scripts/get_onelab.sh
 pin() { .venv/bin/python -c "import importlib.metadata as m; print('$1=='+m.version('$1'))"; }
 PINS="$(pin gmsh) $(pin numpy) $(pin scipy) $(pin h5py) $(pin PyYAML) $(pin jsonschema) $(pin matplotlib) $(pin shapely) $(pin gdstk) pytest"
 SSH=(ssh -o BatchMode=yes -o ConnectTimeout=15 "$HOST")
