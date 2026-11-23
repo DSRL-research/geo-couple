@@ -1,8 +1,7 @@
 import pytest
 from shapely.geometry import Polygon
 
-from geocouple.geometry.gds_import import assembly_from_layers, rectangles
-from geocouple.geometry.gds_import import import_gds
+from geocouple.geometry.gds_import import assembly_from_layers, import_gds, rectangles
 
 LAYER_MAP = {(1, 0): "M1", (2, 0): "V1", (3, 0): "M2"}
 

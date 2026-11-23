@@ -57,7 +57,6 @@ def compute() -> dict:
                                            "median_sd": float(np.std([v["median"] for v in vals])),
                                            "p95": float(np.mean([v["p95"] for v in vals])), "seeds": len(vals)}
         # per family and per cell (first seed), error vs number of primitives
-        p0 = preds[m][0]["preds"]
         s0 = per[0]
         fam = {}
         for n in test:
@@ -106,7 +105,6 @@ def compute() -> dict:
     from geocouple.bench.p5_eval import e5_collect
     e5 = e5_collect()
     fem = [r for r in e5["fem"] if r["wall_s"] and r["fine_tets"]]
-    x = np.log(np.array([r["fine_tets"] for r in fem], float))
     fits = {}
     for key in ("wall_s", "peak_mib"):
         pts = [(math_log(r["fine_tets"]), math_log(r[key])) for r in fem if r.get(key)]
@@ -148,6 +146,7 @@ def figures(res: dict):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+
     from geocouple.viz.style import CATEGORICAL
     col = {m: CATEGORICAL[i] for i, m in enumerate(METHODS)}
     out = RUN / "latest" / "figures"

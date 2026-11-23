@@ -31,7 +31,7 @@ dependencies = [
 learn = ["scikit-learn>=1.4", "torch>=2.2"]          # B1, the local GPs, S0 / G1 / A1, B2–B5
 viz = ["plotly>=5.18", "markdown>=3.5", "pyvista>=0.43"]   # dashboard
 g3 = ["gdsfactory>=8.0"]                              # the synthetic G3 cells of P5
-dev = ["pytest>=8.0", "ruff>=0.6", "pre-commit>=3.5"]
+dev = ["pytest>=8.0", "ruff>=0.17", "pre-commit>=3.5"]
 all = ["geocouple[learn,viz,g3,dev]"]
 
 [project.scripts]
@@ -52,3 +52,22 @@ markers = [
     "server: needs the remote worker (never run in CI)",
 ]
 
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+extend-exclude = ["third_party", "data", "runs", "export"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = [
+    "E501",   # long lines: the code base predates the linter; no reformatting pass yet
+    "E702",   # several short statements on one line (same reason)
+    "E731",   # small lambdas are used as local helpers
+    "E741",   # l / I are the physics names (length, current)
+    "B905",   # zip() without strict=: lengths are checked where it matters
+    "B008",   # dataclass defaults built from calls
+    "UP028",  # explicit for / yield loops are kept
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E402"]

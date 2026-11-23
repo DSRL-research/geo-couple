@@ -14,12 +14,11 @@ from pathlib import Path
 
 import yaml
 
-_LOG = logging.getLogger(__name__)
-
 from geocouple import PROJECT_ROOT
 from geocouple.learn import dataset as ds
 from geocouple.workers import config as wconfig
 
+_LOG = logging.getLogger(__name__)
 
 
 def jobs(run: Path, version: str = "v2") -> list[Path]:
@@ -152,6 +151,7 @@ def main():
 def shell_jobs(run: Path) -> list[Path]:
     """One `fields_shell` job per sample with fields + every test sample of E1/E2 (inference needs their cells)."""
     import shutil
+
     from geocouple.data.sampling import keeps_fields
     from geocouple.workers.job import read_job, write_job
     from geocouple.workers.remote import LOCAL

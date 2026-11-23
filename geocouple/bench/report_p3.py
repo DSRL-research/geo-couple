@@ -229,6 +229,7 @@ def figures(run: Path, res: dict):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+
     from geocouple.viz.style import CATEGORICAL
     col = {m: CATEGORICAL[i] for i, m in enumerate(METHODS)}
     out = run / "figures"

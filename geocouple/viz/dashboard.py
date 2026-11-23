@@ -16,9 +16,9 @@ import http.server
 import json
 import shutil
 import socketserver
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
 
 import markdown
 import numpy as np

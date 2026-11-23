@@ -4,7 +4,16 @@ import gmsh
 import numpy as np
 import pytest
 
-from geocouple.geometry.model import AIR_TAG, INF_TAG, SHELL_TAGS, Conductor, DomainSpec, MeshSpec, build_model, port_tag
+from geocouple.geometry.model import (
+    AIR_TAG,
+    INF_TAG,
+    SHELL_TAGS,
+    Conductor,
+    DomainSpec,
+    MeshSpec,
+    build_model,
+    port_tag,
+)
 from geocouple.geometry.primitives import Primitive
 
 COARSE = MeshSpec(cells_across=1.5, growth=0.4, shell_layers=2)

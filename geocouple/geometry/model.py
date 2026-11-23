@@ -107,7 +107,7 @@ class ModelInfo:
         Path(path).write_text(json.dumps(self.__dict__, indent=2))
 
     @classmethod
-    def load(cls, path: Path) -> "ModelInfo":
+    def load(cls, path: Path) -> ModelInfo:
         d = json.loads(Path(path).read_text())
         d["volumes"] = {int(k): v for k, v in d["volumes"].items()}
         return cls(**d)

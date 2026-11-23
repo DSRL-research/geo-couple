@@ -92,6 +92,7 @@ def submit(run: Path):
 
 def local(run: Path, name: str):
     import numpy as np
+
     from geocouple.learn import composer as cp
     cfg = yaml.safe_load((run / CONFIG.name).read_text())
     b = json.loads((run / "bundle.json").read_text())

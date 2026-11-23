@@ -162,7 +162,7 @@ def validate(g: dict, stack: Stack | None = None) -> list[str]:
             adj[e["src"]].add(e["dst"])
             adj[e["dst"]].add(e["src"])
     for c in g["conductors"]:
-        start, todo, reach = c["nodes"][0], [c["nodes"][0]], {c["nodes"][0]}
+        todo, reach = [c["nodes"][0]], {c["nodes"][0]}
         while todo:
             for m in adj[todo.pop()]:
                 if m not in reach:

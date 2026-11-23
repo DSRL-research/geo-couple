@@ -126,7 +126,7 @@ class Scaler:
         self.s = np.asarray(s, np.float32)
 
     @classmethod
-    def fit(cls, arrays: list[dict]) -> "Scaler":
+    def fit(cls, arrays: list[dict]) -> Scaler:
         s = []
         for k in range(3):
             v = np.concatenate([np.linalg.norm(a["fields"][:, 3 * k:3 * k + 3], axis=1) for a in arrays])

@@ -16,7 +16,7 @@ Este pragul minim: fără efecte de margine 3D detaliate, fără distribuția ne
 from __future__ import annotations
 
 import math
-from functools import lru_cache
+from functools import cache
 
 import numpy as np
 
@@ -145,7 +145,7 @@ def _contact_links(asm, stack, lines: dict):
 
 
 # --- kernels ----------------------------------------------------------------------------------------------------------
-@lru_cache(maxsize=None)
+@cache
 def _self_L(l_um: float, w_um: float, t_um: float) -> float:
     return analytic.partial_self_inductance_bar(l_um * 1e-6, w_um * 1e-6, t_um * 1e-6)
 

@@ -150,8 +150,7 @@ def precompute(names: list[str] | None = None, out: Path | None = None, workers:
     asms = [a for a in full_assemblies(cfg, load_stack(cfg["stack"])) if not names or a.name in names]
     todo = [a for a in asms if not (out / f"{a.name}.json").exists()]
     with ProcessPoolExecutor(workers) as ex:
-        for name in ex.map(_one, [(a, cfg["stack"], str(out)) for a in todo]):
-            pass
+        list(ex.map(_one, [(a, cfg["stack"], str(out)) for a in todo]))
     return out
 
 

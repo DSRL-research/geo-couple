@@ -231,6 +231,6 @@ class Primitive:
                 "conductor": self.conductor, "x_um": self.x_um, "y_um": self.y_um, "angle_deg": self.angle_deg}
 
     @classmethod
-    def from_dict(cls, d: dict) -> "Primitive":
+    def from_dict(cls, d: dict) -> Primitive:
         return cls(id=d["id"], type=d["type"], layer=d["layer"], params=d["params"], conductor=d.get("conductor"),
                    x_um=d.get("x_um", 0.0), y_um=d.get("y_um", 0.0), angle_deg=d.get("angle_deg", 0.0))

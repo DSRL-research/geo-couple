@@ -27,8 +27,15 @@ from geocouple import PROJECT_ROOT, REPORTS_DIR
 from geocouple.geometry.model import Conductor, DomainSpec, MeshSpec, build_model
 from geocouple.geometry.primitives import Primitive
 from geocouple.physics import analytic
-from geocouple.physics.extract import (capacitance_matrix, check_physical_matrix, copy_templates, read_global,
-                                      run_getdp, solve_rl, write_regions)
+from geocouple.physics.extract import (
+    capacitance_matrix,
+    check_physical_matrix,
+    copy_templates,
+    read_global,
+    run_getdp,
+    solve_rl,
+    write_regions,
+)
 from geocouple.stack import load_stack
 from geocouple.tools import find_tools
 

@@ -21,7 +21,7 @@ def primitive_surfaces(msh: Path, max_node_id: int = 999) -> dict[int, dict]:
         tags, xyz, _ = gmsh.model.mesh.getNodes()
         index = {int(t): i for i, t in enumerate(tags)}
         xyz = np.reshape(xyz, (-1, 3)) * 1e6
-        for dim, tag in gmsh.model.getPhysicalGroups(3):
+        for _, tag in gmsh.model.getPhysicalGroups(3):
             if tag > max_node_id:
                 continue
             vols = gmsh.model.getEntitiesForPhysicalGroup(3, tag)
@@ -99,7 +99,7 @@ def _box_edges(center, half):
     for i in range(8):
         for j in range(i + 1, 8):
             if np.sum(np.abs(corners[i] - corners[j]) > 1e-9) == 1:
-                for k, p in enumerate((corners[i], corners[j])):
+                for p in (corners[i], corners[j]):
                     xs.append(p[0]); ys.append(p[1]); zs.append(p[2])
                 xs.append(None); ys.append(None); zs.append(None)
     return xs, ys, zs

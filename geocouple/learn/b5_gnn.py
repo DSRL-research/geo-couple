@@ -132,7 +132,6 @@ def run(samples: list[dict], train: list[str], test: list[str], cfg: dict, seed:
     tg = {n: _targets(by[n]) for n in train}
     # standardisation of the log self terms (training set only)
     allv = {k: np.concatenate([tg[n][k] for n in train]) for k in ("R", "L", "C")}
-    mu = {k: float(v.mean()) for k, v in allv.items()}
     sd = {k: float(v.std() + 1e-6) for k, v in allv.items()}
     d_in = tens[train[0]]["x"].shape[1]
     # feature standardisation
@@ -151,7 +150,7 @@ def run(samples: list[dict], train: list[str], test: list[str], cfg: dict, seed:
     rng = np.random.default_rng(seed)
     t0 = time.perf_counter()
     batch = 16
-    for ep in range(cfg["epochs"]):
+    for _ in range(cfg["epochs"]):
         order = rng.permutation(len(train))
         for b0 in range(0, len(order), batch):
             loss = 0.0

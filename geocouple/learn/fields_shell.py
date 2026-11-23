@@ -111,8 +111,7 @@ def export(asm, stack, spec, work: Path) -> tuple[dict, dict]:
     """Rebuild the fine mesh, solve the canonical excitation, return the cell arrays and the global values."""
     from geocouple.data.build import mesh_pair
     from geocouple.geometry.model import AIR_TAG
-    from geocouple.physics.extract import (copy_templates, element_order, read_global, run_getdp,
-                                           write_regions)
+    from geocouple.physics.extract import copy_templates, element_order, read_global, run_getdp, write_regions
     _, fine, _ = mesh_pair(asm, stack, spec, work / "mesh")
     exc = next(c for c in fine.conductors if c["port_hi"] is not None)
     others = [c for c in fine.conductors if c["id"] != exc["id"]]
@@ -201,8 +200,8 @@ def run(inputs: Path, result: Path, job: dict) -> dict:
     import yaml
 
     from geocouple.data.build import PipelineSpec
-    from geocouple.workers.job import assembly_from_dict
     from geocouple.stack import load_stack
+    from geocouple.workers.job import assembly_from_dict
     inputs = Path(inputs)
     asm = assembly_from_dict(json.loads((inputs / "assembly.json").read_text()))
     cfg = yaml.safe_load((inputs / "config.yaml").read_text())

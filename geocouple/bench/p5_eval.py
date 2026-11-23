@@ -80,7 +80,7 @@ def e4(budgets=(0.1, 0.2, 0.4, 0.8), ratios=(0, 2, 4, 8), seeds=(0, 1, 2)):
                     n_f_tot += n_f
                     n_c_tot += n_c
                     keys = sorted(by[pool[0]]["params"])
-                    X = lambda ns: np.array([_x(by[n], keys) for n in ns])  # noqa: E731
+                    X = lambda ns: np.array([_x(by[n], keys) for n in ns])  # noqa: B023 - called within this iteration
                     var = np.ptp(X(pool), axis=0) > 0
                     te = [n for n in test if by[n]["generator"] == kind]
                     if ratio == 0:

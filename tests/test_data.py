@@ -93,6 +93,7 @@ def test_l_matrix_of_parallel_bars(stack, tmp_path):
 
 def test_full_plan_counts_fields_subset_and_g2_variants(stack):
     import yaml
+
     from geocouple import PROJECT_ROOT
     from geocouple.data.sampling import full_assemblies, keeps_fields, split_counts
     assert split_counts(30, ["via_chain", "bus", "spiral", "meander"]) == {"bus": 8, "meander": 8, "spiral": 7,
@@ -112,6 +113,7 @@ def test_full_plan_counts_fields_subset_and_g2_variants(stack):
 
 def test_replaced_samples_keep_other_names(stack):
     import yaml
+
     from geocouple import PROJECT_ROOT
     from geocouple.data.sampling import sample_family
     cfg = yaml.safe_load((PROJECT_ROOT / "configs" / "datasets" / "train.yaml").read_text())

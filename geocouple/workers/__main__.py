@@ -77,8 +77,9 @@ def main():
             sent = r.submit(jobs)
             print("submitted:", len(sent))
             print(r.start())
-            from geocouple.workers.remote import LOCAL
             import time
+
+            from geocouple.workers.remote import LOCAL
             f = LOCAL / "full_submitted.json"
             prev = json.loads(f.read_text()) if f.exists() else {}
             f.write_text(json.dumps({"time": prev.get("time", time.time()), "jobs": len(jobs),
