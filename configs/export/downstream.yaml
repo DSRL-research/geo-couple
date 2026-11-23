@@ -1,0 +1,24 @@
+# Modelele exportate în contractul proiectului aval (~/work/demo_circuit, circuit_ml), câte unul per primitivă G0 și
+# per generator G1. G2 este doar de test și nu se exportă. Intervalele vin din configs/families/g0.yaml (G0) și sunt
+# aceleași pentru G1. Unghiurile sunt în grade (număr simplu), lungimile în µm.
+out_dir: export/downstream
+pipeline: {coarse_mesh: {cells_across: 1, growth: 0.4, shell_layers: 4, port_refine: 0.5, min_quality: 0.05},
+           adapt: {target_tets: 50000, min_size_um: 0.05}}
+models:
+  - {name: gc_bar, family: G0, primitive: bar, layer: M1,
+     params: {length: [10, 200, 50], width: [0.5, 10, 2]}}
+  - {name: gc_corner, family: G0, primitive: corner, layer: M1,
+     params: {arm_a: [5, 100, 20], arm_b: [5, 100, 20], width: [0.5, 10, 2]}, constraints: ["width_um < arm_a_um", "width_um < arm_b_um"]}
+  - {name: gc_via, family: G0, primitive: via, layer: V1, params: {width: [0.5, 4, 1]}}
+  - {name: gc_spiral_segment, family: G0, primitive: spiral_segment, layer: M2,
+     params: {radius: [5, 100, 20], width: [0.5, 10, 2], sweep: [15, 180, 90, deg]}, constraints: ["width_um < radius_um"]}
+  - {name: gc_ground_plane, family: G0, primitive: ground_plane, layer: M1,
+     params: {length: [20, 300, 60], width: [20, 300, 40]}}
+  - {name: gc_parallel_bars, family: G1, generator: parallel_bars,
+     params: {length: [10, 200, 40], width: [0.5, 10, 2], gap: [0.5, 20, 2]}}
+  - {name: gc_bar_over_plane, family: G1, generator: bar_over_plane,
+     params: {length: [10, 200, 40], width: [0.5, 10, 2]}}
+  - {name: gc_crossing_bars, family: G1, generator: crossing_bars,
+     params: {length: [10, 100, 30], width: [0.5, 10, 2], angle: [15, 90, 90, deg]}}
+  - {name: gc_bar_via, family: G1, generator: bar_via,
+     params: {length: [10, 200, 30], width: [1.5, 10, 2], via_width: [0.5, 1.5, 1]}, constraints: ["via_width_um < width_um"]}
