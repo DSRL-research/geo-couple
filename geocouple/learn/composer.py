@@ -112,46 +112,47 @@ def membership(f: dict, conds: list[int]) -> np.ndarray:
     return np.array([[1.0 if nd["conductor"] == k else 0.0 for k in conds] for nd in f["nodes"]], np.float32)
 
 
-# --- local models (GP of the downstream project, on G0) ---------------------------------------------------------------
+# --- local models (one GP per primitive type, on G0) -----------------------------------------------------------------------
 def local_residuals(data: dict, train_g0: list[str], seed: int = 0, folds: int = 5) -> dict[str, np.ndarray]:
     """(n_nodes, 3) predicted log residuals ρ, ℓ, r for every primitive of every sample. G0 training samples get
     out-of-fold predictions (no leakage into the pair / context models)."""
-    from geocouple.learn.surrogate import Surrogate
-
-    def targets(name):
-        d = data[name]
-        lab, base = d["labels"], analytic_base(d)
-        return np.array([math.log(lab["R_ohm"][0] / base["R"][0]), math.log(lab["L_nH"][0][0] / base["A"][0, 0]),
-                         math.log(lab["C_fF"][0][0] / base["Ciso"][0])])
-
-    by_type: dict = {}
-    for n in train_g0:
-        by_type.setdefault(data[n]["nodes"][0]["type"], []).append(n)
     rng = np.random.default_rng(seed)
     fold_of = {n: int(rng.integers(folds)) for n in train_g0}
-
-    def fit(names):
-        models = {}
-        for t in TYPES:
-            tn = [n for n in names if data[n]["nodes"][0]["type"] == t]
-            if len(tn) < 3:
-                continue
-            x = np.array([local_x(data[n]["nodes"][0]) for n in tn])
-            y = np.exp(np.array([targets(n) for n in tn]))
-            models[t] = Surrogate("gp", output_keys=["R", "L", "C"], param_keys=LOCAL_KEYS[t]).fit(x, y, seed=seed)
-        return models
-
-    full = fit(train_g0)
-    per_fold = {k: fit([n for n in train_g0 if fold_of[n] != k]) for k in range(folds)}
+    full = fit_local(data, train_g0, seed)
+    per_fold = {k: fit_local(data, [n for n in train_g0 if fold_of[n] != k], seed) for k in range(folds)}
     out = {}
     for name, d in data.items():
-        m = per_fold[fold_of[name]] if name in fold_of else full
-        res = np.zeros((len(d["nodes"]), 3))
-        for i, nd in enumerate(d["nodes"]):
-            if nd["type"] in m:
-                res[i] = np.log(m[nd["type"]].predict(np.array([local_x(nd)]))[0])
-        out[name] = res
+        out[name] = apply_local(per_fold[fold_of[name]] if name in fold_of else full, d)
     return out
+
+
+def _local_targets(d: dict) -> np.ndarray:
+    lab, base = d["labels"], analytic_base(d)
+    return np.array([math.log(lab["R_ohm"][0] / base["R"][0]), math.log(lab["L_nH"][0][0] / base["A"][0, 0]),
+                     math.log(lab["C_fF"][0][0] / base["Ciso"][0])])
+
+
+def fit_local(data: dict, names: list[str], seed: int = 0) -> dict:
+    """One GP per primitive type (≥ 3 isolated G0 samples of that type): log residuals ρ, ℓ, r of R, L, C."""
+    from geocouple.learn.surrogate import Surrogate
+    models = {}
+    for t in TYPES:
+        tn = [n for n in names if data[n]["nodes"][0]["type"] == t]
+        if len(tn) < 3:
+            continue
+        x = np.array([local_x(data[n]["nodes"][0]) for n in tn])
+        y = np.exp(np.array([_local_targets(data[n]) for n in tn]))
+        models[t] = Surrogate("gp", output_keys=["R", "L", "C"], param_keys=LOCAL_KEYS[t]).fit(x, y, seed=seed)
+    return models
+
+
+def apply_local(models: dict, d: dict) -> np.ndarray:
+    """(n_nodes, 3) log residuals of one sample; 0 for primitive types without a local model."""
+    res = np.zeros((len(d["nodes"]), 3))
+    for i, nd in enumerate(d["nodes"]):
+        if nd["type"] in models:
+            res[i] = np.log(models[nd["type"]].predict(np.array([local_x(nd)]))[0])
+    return res
 
 
 # --- torch models -----------------------------------------------------------------------------------------------------
@@ -392,7 +393,8 @@ def loss_fn(R, L, C, t, w_mut: float = 10.0):
 
 
 def train(model_name: str, data: dict, loc: dict, train: list[str], test: list[str], cfg: dict, seed: int = 0,
-          log=print) -> tuple[dict, dict]:
+          log=print, keep_model: bool = False) -> tuple[dict, dict]:
+    """Train one model; predictions for `test` and a meta dict (with the trained network under "net" if keep_model)."""
     import torch
     torch.manual_seed(seed)
     torch.set_num_threads(int(cfg.get("threads", 1)))
@@ -445,8 +447,11 @@ def train(model_name: str, data: dict, loc: dict, train: list[str], test: list[s
             t_inf[n] = time.perf_counter() - t1
             if "attn" in o:
                 attn[n] = [a.mean(0).tolist() for a in o["attn"]]  # mean over heads, per layer: (n, n + n_clusters)
-    return preds, {"train_s": t_train, "infer_s": t_inf, "loss": hist, "attn": attn,
-                   "params": int(sum(p.numel() for p in net.parameters())), "n_train": len(tr)}
+    meta = {"train_s": t_train, "infer_s": t_inf, "loss": hist, "attn": attn,
+            "params": int(sum(p.numel() for p in net.parameters())), "n_train": len(tr)}
+    if keep_model:
+        meta["net"], meta["d_node"] = net, d_node
+    return preds, meta
 
 
 def analytic_only(data: dict, loc: dict | None, names: list[str]) -> dict:
