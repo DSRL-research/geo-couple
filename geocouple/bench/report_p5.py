@@ -9,7 +9,6 @@ import sys
 from pathlib import Path
 
 import numpy as np
-import yaml
 
 from geocouple import PROJECT_ROOT, REPORTS_DIR
 from geocouple.learn import dataset as ds

@@ -1,7 +1,5 @@
 """P2: stocare VTKHDF, matricea L, eșantionare, export aval, referințe independente."""
 
-import json
-from pathlib import Path
 
 import numpy as np
 import pytest

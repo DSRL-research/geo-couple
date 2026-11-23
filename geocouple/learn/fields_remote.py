@@ -78,8 +78,8 @@ def submit(run: Path, version: str = "v2"):
 
 def collect(run: Path):
     """Sync the finished jobs and convert their predictions to preds/<B2|B3|B4>_<E1|E2>.json (+ oracle)."""
-    from geocouple.bench.p3 import load, save_preds
-    from geocouple.workers.remote import LOCAL, Remote
+    from geocouple.bench.p3 import load
+    from geocouple.workers.remote import Remote
     Remote().sync(merge=False)
     _, samples, splits = load(run)
     by = {s["name"]: s for s in samples}

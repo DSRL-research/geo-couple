@@ -6,7 +6,6 @@ asamblare validă se sar, iar secvența continuă, deci setul rămâne determini
 
 from __future__ import annotations
 
-import numpy as np
 from scipy.stats import qmc
 
 from geocouple.geometry import compose

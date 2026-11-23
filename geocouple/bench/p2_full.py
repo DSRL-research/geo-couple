@@ -23,7 +23,7 @@ import numpy as np
 import yaml
 
 from geocouple import PROJECT_ROOT, REPORTS_DIR
-from geocouple.data.sampling import full_assemblies, keeps_fields
+from geocouple.data.sampling import full_assemblies
 from geocouple.stack import load_stack
 
 _LOG = logging.getLogger(__name__)

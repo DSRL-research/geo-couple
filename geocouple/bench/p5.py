@@ -15,7 +15,6 @@ import argparse
 import json
 import logging
 import time
-from pathlib import Path
 
 import yaml
 
@@ -72,7 +71,7 @@ def g3_jobs(dry: bool = False):
 def g3_run(where: str = "local", shard: str = "0/1"):
     from geocouple.workers import config as wconfig
     from geocouple.workers.job import read_job
-    from geocouple.workers.remote import LOCAL, Remote, merge_result
+    from geocouple.workers.remote import LOCAL, Remote
     from geocouple.workers.scheduler import run_local
     cfg = wconfig.load()
     ids = json.loads((RUNS / "g3_jobs.json").read_text())["jobs"]

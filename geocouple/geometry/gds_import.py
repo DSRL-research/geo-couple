@@ -16,7 +16,7 @@ from pathlib import Path
 
 import gdstk
 import numpy as np
-from shapely.geometry import LineString, Polygon, box
+from shapely.geometry import Polygon, box
 from shapely.ops import unary_union
 
 from geocouple.geometry.compose import Assembly

@@ -65,7 +65,7 @@ def field_slice(path: Path, field: str = "B", log: bool = True, max_cells: int =
     """Cells of a stored sample cut by the horizontal plane through the conductors' mid-height, coloured by |field|."""
     import pyvista as pv
 
-    from geocouple.viz.style import SEQUENTIAL_SCALE, layout
+    from geocouple.viz.style import SEQUENTIAL_SCALE
 
     m = pv.read(str(path))
     cond = m.extract_cells(np.flatnonzero(m.cell_data["region"] > 0))

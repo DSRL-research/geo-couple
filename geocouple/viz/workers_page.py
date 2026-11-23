@@ -5,7 +5,6 @@ from __future__ import annotations
 import datetime as dt
 import html
 import json
-from pathlib import Path
 
 import plotly.graph_objects as go
 import yaml
