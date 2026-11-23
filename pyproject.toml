@@ -40,6 +40,12 @@ all = ["geocouple[learn,viz,g3,dev]"]
 [project.scripts]
 geocouple = "geocouple.cli:main"
 
+[project.urls]
+Homepage = "https://github.com/DSRL-research/geo-couple"
+Repository = "https://github.com/DSRL-research/geo-couple"
+Documentation = "https://github.com/DSRL-research/geo-couple/tree/main/docs"
+Changelog = "https://github.com/DSRL-research/geo-couple/blob/main/CHANGELOG.md"
+
 [tool.setuptools.packages.find]
 include = ["geocouple*"]
 

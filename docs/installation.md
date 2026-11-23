@@ -6,7 +6,7 @@ the repository; nothing needs root.
 ## 1. Python package
 
 ```bash
-git clone <repository-url> geo-couple
+git clone https://github.com/DSRL-research/geo-couple.git geo-couple
 cd geo-couple
 python3 -m venv .venv
 .venv/bin/pip install -e ".[learn,viz,dev]"

@@ -12,7 +12,7 @@ This is a research proof of concept (steps P0–P5); the layer stack is illustra
 ## Install
 
 ```bash
-git clone <repository-url> geo-couple && cd geo-couple
+git clone https://github.com/DSRL-research/geo-couple.git geo-couple && cd geo-couple
 python3 -m venv .venv
 .venv/bin/pip install -e ".[learn,viz,dev]"
 scripts/get_onelab.sh           # GetDP + Gmsh binaries into third_party/onelab (for the FEM labels)
