@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,6 +8,8 @@ version = "0.1.0"
 description = "Learning RLC extraction for 3D interconnect geometries composed of primitives, with Gmsh + GetDP FEM labels"
 readme = "README.md"
 requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
 authors = [{ name = "Mihai Daian" }]
 keywords = ["interconnect", "RLC extraction", "finite elements", "graph neural networks", "GDS"]
 classifiers = [

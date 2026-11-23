@@ -37,6 +37,11 @@ Python 3.11+, line length 120, `ruff` (configured in `pyproject.toml`). Library 
 (`_LOG = logging.getLogger(__name__)`); only command-line output uses `print`. Public functions get type hints and a
 docstring that states units (µm, Ω, nH, fF).
 
+## License
+
+geocouple is licensed under the Apache License 2.0; contributions are accepted under the same license (section 5
+of the license).
+
 ## Pull requests
 
 One topic per pull request, with the commands you ran and their results. New primitives, generators or models:

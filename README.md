@@ -114,7 +114,13 @@ The [tutorial](docs/tutorial.md) goes through every step.
 [Extending](docs/extending.md) · [Remote worker](docs/workers.md) · [FAQ](docs/faq.md) ·
 [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
-## Citation and license
+## Citation
 
-Cite with [CITATION.cff](CITATION.cff). License: not chosen yet (see [LICENSE](LICENSE)). geocouple calls GetDP and
-Gmsh (GPL) and optionally FastHenry / FastCap as external programs; none of them is included.
+Cite with [CITATION.cff](CITATION.cff).
+
+## License
+
+Apache License 2.0: see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+
+GetDP and Gmsh (GPL) and, optionally, FastHenry / FastCap (their own licenses) are external dependencies: geocouple
+runs them as separate programs (and imports the `gmsh` Python package), and none of them is distributed with it.

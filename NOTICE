@@ -1,0 +1,9 @@
+geocouple
+Copyright 2026 Mihai Daian
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+geocouple runs the following programs as external tools; they are not included in this distribution and keep their
+own licenses:
+- GetDP and Gmsh (GNU General Public License), https://getdp.info, https://gmsh.info
+- FastHenry and FastCap (FastFieldSolvers; optional), https://github.com/ediloren

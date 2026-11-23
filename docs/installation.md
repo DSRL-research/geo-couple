@@ -53,6 +53,12 @@ scripts/build_fast_solvers.sh    # git clone + make into third_party/FastHenry2 
 
 Lookup order: `$FASTHENRY_BIN` / `$FASTCAP_BIN`, `third_party/…/bin`, `PATH`. They need `gcc` and `make`.
 
+## Licenses
+
+geocouple itself is Apache-2.0 ([LICENSE](../LICENSE), [NOTICE](../NOTICE)). The solvers are separate programs,
+downloaded or built by the scripts above and never distributed with geocouple: GetDP and Gmsh are GPL, FastHenry
+and FastCap carry their own licenses. The `gmsh` Python package (a pip dependency) is GPL as well.
+
 ## 4. Check
 
 ```bash

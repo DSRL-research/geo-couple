@@ -3,6 +3,7 @@ message: "If you use geocouple, please cite it as below."
 title: "geocouple: learning RLC extraction for 3D interconnect geometries composed of primitives"
 version: 0.1.0
 type: software
+license: Apache-2.0
 authors:
   - family-names: Daian
     given-names: Mihai

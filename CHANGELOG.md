@@ -29,5 +29,9 @@ First public version: the proof of concept (steps P0–P5) packaged for other us
 - `geocouple/data/`, `geocouple/export/` and `configs/export/` were excluded from version control by unanchored
   `.gitignore` patterns.
 
+### License
+- Apache License 2.0 (`LICENSE`, `NOTICE`). GetDP / Gmsh (GPL) and FastHenry / FastCap are external tools, not
+  distributed with geocouple, under their own licenses.
+
 ### Results
 - Unchanged: the PoC numbers in `docs/reports/` (P0–P5) are those of `sim_version` p2.3.
