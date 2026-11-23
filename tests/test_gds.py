@@ -2,7 +2,6 @@ import pytest
 from shapely.geometry import Polygon
 
 from geocouple.geometry.gds_import import assembly_from_layers, rectangles
-from geocouple.geometry.gds_synthetic import write_cells
 from geocouple.geometry.gds_import import import_gds
 
 LAYER_MAP = {(1, 0): "M1", (2, 0): "V1", (3, 0): "M2"}
@@ -32,6 +31,9 @@ def test_layers_to_conductors(stack):
 
 
 def test_synthetic_cells_import(stack, tmp_path):
+    pytest.importorskip("gdsfactory")  # extra g3
+    from geocouple.geometry.gds_synthetic import write_cells
+
     paths = write_cells(tmp_path)
     for name, path in paths.items():
         asm, rep = import_gds(path, LAYER_MAP, stack)

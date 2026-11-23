@@ -46,5 +46,9 @@ include = ["geocouple*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["fem: rulează Gmsh + GetDP (mai lent)"]
+markers = [
+    "fem: runs Gmsh + GetDP (slower; skipped when GetDP is missing)",
+    "solvers: runs FastHenry / FastCap (skipped when they are not built)",
+    "server: needs the remote worker (never run in CI)",
+]
 

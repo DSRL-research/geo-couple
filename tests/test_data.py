@@ -12,7 +12,6 @@ from geocouple.export.run_model import read_values
 from geocouple.geometry import compose
 from geocouple.physics import analytic
 from geocouple.physics.fast import fasthenry_input, run_fastcap, run_fasthenry
-from geocouple.tools import find_fast_solver
 
 
 def test_vtkhdf_roundtrip(tmp_path):
@@ -55,7 +54,7 @@ def test_export_folder_contract(stack, tmp_path):
         compose.check_assembly(asm, stack)
 
 
-@pytest.mark.skipif(find_fast_solver("fasthenry", required=False) is None, reason="FastHenry not built (scripts/build_fast_solvers.sh)")
+@pytest.mark.solvers
 def test_fasthenry_bar_and_pair(stack):
     bar = compose.Assembly("b", "G0", "bar", {})
     bar.add("bar", "M1", {"length_um": 50.0, "width_um": 2.0}, 1)
@@ -69,7 +68,7 @@ def test_fasthenry_bar_and_pair(stack):
     assert "external" in fasthenry_input(compose.via_chain(), stack)
 
 
-@pytest.mark.skipif(find_fast_solver("fastcap", required=False) is None, reason="FastCap not built (scripts/build_fast_solvers.sh)")
+@pytest.mark.solvers
 def test_fastcap_cube(stack):
     cube = compose.Assembly("c", "G0", "bar", {})
     cube.add("bar", "M1", {"length_um": 1.0, "width_um": 1.0}, 1)
