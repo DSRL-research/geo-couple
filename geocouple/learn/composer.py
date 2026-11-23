@@ -3,8 +3,8 @@
 Termeni de bază pe primitive (`superpos.features`, din B0): R[I], A[I, J] (L parțial cu curenții conductoarelor),
 P[I, J] (coeficienți de potențial, sarcină uniformă pe primitivă). Corecții învățate:
 
-- **local** (toate modelele): reziduuri log pe primitive izolate, învățate pe G0 cu GP-ul proiectului aval
-  (`circuit_ml` Surrogate, ca B1): ρ (R), ℓ (L proprie), r (C proprie, față de 1/P[I, I]);
+- **local** (toate modelele): reziduuri log pe primitive izolate, învățate pe G0 cu GP-ul de surrogate
+  (`geocouple.learn.surrogate.Surrogate`, ca B1): ρ (R), ℓ (L proprie), r (C proprie, față de 1/P[I, I]);
 - **pereche** δ_M, δ_c (și δ_R pe contacte): S0 — MLP pe trăsăturile perechii (antrenat doar pe G1);
   G1 — GNN cu muchii de contact + cuplaj (prag variabil) și nucleul analitic pe muchie; A1 — atenție între primitive
   cu bias din nucleu, ierarhică (perechi apropiate individual, clustere îndepărtate prin tokeni de cluster), + Δ.
@@ -116,8 +116,7 @@ def membership(f: dict, conds: list[int]) -> np.ndarray:
 def local_residuals(data: dict, train_g0: list[str], seed: int = 0, folds: int = 5) -> dict[str, np.ndarray]:
     """(n_nodes, 3) predicted log residuals ρ, ℓ, r for every primitive of every sample. G0 training samples get
     out-of-fold predictions (no leakage into the pair / context models)."""
-    from geocouple.learn.b1_params import _surrogate_cls
-    Surrogate = _surrogate_cls()
+    from geocouple.learn.surrogate import Surrogate
 
     def targets(name):
         d = data[name]

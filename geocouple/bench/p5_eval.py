@@ -47,8 +47,8 @@ def _cost(lab: dict) -> tuple[float, float]:
 def e4(budgets=(0.1, 0.2, 0.4, 0.8), ratios=(0, 2, 4, 8), seeds=(0, 1, 2)):
     """G0, E1 split. Budget = fraction of the cost of all E1 training samples at fine fidelity. ratio = coarse samples
     per fine sample (0 = fine only). Multi-fidelity: GP on coarse labels × exp(GP on log(fine / coarse))."""
-    from geocouple.learn.b1_params import _surrogate_cls, _x
-    Surrogate = _surrogate_cls()
+    from geocouple.learn.b1_params import _x
+    from geocouple.learn.surrogate import Surrogate
     samples = ds.load_samples(PROJECT_ROOT / "data" / "train_v1", ("G0",))
     by = {s["name"]: s for s in samples}
     train, test = ds.split_e1(samples, 0.2, 0)

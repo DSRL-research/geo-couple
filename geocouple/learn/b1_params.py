@@ -1,5 +1,5 @@
-"""B1 — surrogate scalar pe parametri (docs/dev/design.md §7): exact clasa `Surrogate` din proiectul aval
-(`circuit_ml.ml.surrogates`, GP Matern 5/2 și ansamblu de 5 MLP, în spațiul log), importată fără modificări.
+"""B1 — surrogate scalar pe parametri (docs/dev/design.md §7): `geocouple.learn.surrogate.Surrogate`, același algoritm
+ca `circuit_ml.ml.surrogates.Surrogate` din proiectul aval (GP Matern 5/2 și ansamblu de 5 MLP, în spațiul log).
 
 Un surrogate per primitivă G0 (intrare: parametrii ei; stratul M1/M2 ca număr), ieșiri: R, L proprie, C proprie.
 Nu poate compune: o geometrie G2 nu are vector de parametri în spațiul unei primitive (E2 = neacoperit).
@@ -7,21 +7,13 @@ Nu poate compune: o geometrie G2 nu are vector de parametri în spațiul unei pr
 
 from __future__ import annotations
 
-import sys
 import time
-from pathlib import Path
 
 import numpy as np
 
-DOWNSTREAM = Path.home() / "work" / "demo_circuit"
+from geocouple.learn.surrogate import Surrogate
+
 OUT_KEYS = ["R_ohm", "L_nH", "C_fF"]
-
-
-def _surrogate_cls():
-    if str(DOWNSTREAM) not in sys.path:
-        sys.path.insert(0, str(DOWNSTREAM))
-    from circuit_ml.ml.surrogates import Surrogate  # noqa: PLC0415 - read-only use of the downstream package
-    return Surrogate
 
 
 def _x(s: dict, keys: list[str]) -> list[float]:
@@ -33,7 +25,6 @@ def _y(s: dict) -> list[float]:
 
 
 def run_e1(samples: list[dict], train: list[str], test: list[str], model: str, seed: int = 0) -> tuple[dict, dict]:
-    Surrogate = _surrogate_cls()
     by = {s["name"]: s for s in samples}
     preds, t_train, t_inf = {}, 0.0, {}
     for kind in sorted({by[n]["generator"] for n in test}):
@@ -59,7 +50,6 @@ def run_e1(samples: list[dict], train: list[str], test: list[str], model: str, s
 def reproduce_check() -> dict:
     """B1 „reprodus corect”: același obiect ca în proiectul aval pe o funcție cu formă cunoscută (lege de putere,
     ca R = ρl/(wt)): GP și MLP o interpolează sub 1% pe puncte noi; în plus, pe datele de antrenare."""
-    Surrogate = _surrogate_cls()
     rng = np.random.default_rng(0)
     x = np.exp(rng.uniform(np.log([10, 0.5]), np.log([200, 10]), size=(60, 2)))
     f = lambda x: np.column_stack([x[:, 0] / x[:, 1], np.sqrt(x[:, 0] * x[:, 1])])  # noqa: E731
