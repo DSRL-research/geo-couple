@@ -1,0 +1,30 @@
+# P4 — S0, G1, A1 pe E2 și E3 (README §7–§9), pe data/train_v1 (etichete p2.3).
+name: p4_composition
+data_root: data/train_v1
+features: data/work/p4_features          # geocouple.learn.superpos (nucleul analitic pe primitive)
+seeds: [0, 1, 2]
+train: {epochs: 300, lr: 0.003, hidden: 64, reg: 0.01, threads: 1}
+# prag de cuplaj în unități de lățime medie a perechii (gap ≤ thr × w); null = toate perechile; 0 = doar contacte
+default_thr_w: 10
+variants:
+  S0:          {model: S0}
+  G1_t0:       {model: G1, thr_w: 0}
+  G1_t2:       {model: G1, thr_w: 2}
+  G1_t5:       {model: G1, thr_w: 5}
+  G1_t10:      {model: G1, thr_w: 10}
+  G1_tall:     {model: G1, thr_w: null}
+  A1_t0:       {model: A1, thr_w: 0}
+  A1_t2:       {model: A1, thr_w: 2}
+  A1_t5:       {model: A1, thr_w: 5}
+  A1_t10:      {model: A1, thr_w: 10}
+  A1_tall:     {model: A1, thr_w: null}
+  # E3: fără termeni pereche dincolo de prag (nici analitici): cât contează cuplajele non-locale
+  G1loc_t0:    {model: G1, thr_w: 0, pair_scope: edges}
+  G1loc_t2:    {model: G1, thr_w: 2, pair_scope: edges}
+  G1loc_t5:    {model: G1, thr_w: 5, pair_scope: edges}
+  G1loc_t10:   {model: G1, thr_w: 10, pair_scope: edges}
+  G1loc_tall:  {model: G1, thr_w: null, pair_scope: edges}
+  # E3: fără nucleu analitic pe muchie (cuplajele învățate de la zero)
+  G1noK_t10:   {model: G1, thr_w: 10, pair_scope: edges, kernel: false}
+  G1noK_tall:  {model: G1, thr_w: null, pair_scope: edges, kernel: false}
+E2: {S0: S0, G1: G1_t10, A1: A1_t10}

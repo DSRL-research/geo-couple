@@ -1,0 +1,39 @@
+# Seturile de date (README §6.3). P2 rulează doar pilotul (`pilot`); numărul de eșantioane pentru `full` se fixează
+# după confirmarea bugetului de către utilizator. Eșantionare Sobol (scrambled, seed fix) pe intervalele de mai jos.
+name: train_v1
+seed: 0
+stack: configs/stack/default.yaml
+pipeline:
+  domain: {r_in_factor: 1.5, r_out_ratio: 1.25}
+  coarse_mesh: {cells_across: 1, growth: 0.4, shell_layers: 4, port_refine: 0.5, min_quality: 0.05}
+  adapt: {target_tets: 50000, min_size_um: 0.05, recalibrate_below: 0.7, max_recalibrations: 2}
+  # elemente de ordinul 2 pentru v_es și A pe mesh-ul fine, ordinul 1 pe coarse (vezi reports/P2.md)
+coupling: {threshold_um: 10.0, sample_spacing_um: 0.5}
+G0:   # primitive: intervale (layer = listă de alegeri)
+  bar:            {length_um: [10, 200], width_um: [0.5, 10], layer: [M1, M2]}
+  corner:         {arm_a_um: [5, 100], arm_b_um: [5, 100], width_um: [0.5, 10], layer: [M1, M2]}
+  via:            {width_um: [0.5, 4], layer: [V1]}
+  spiral_segment: {radius_um: [5, 100], width_um: [0.5, 10], sweep_deg: [15, 180], layer: [M1, M2]}
+  ground_plane:   {length_um: [20, 200], width_um: [20, 200], layer: [M1]}   # ≤ 200 µm și arie ≤ 18 000 µm² (sampling.py): plafonul de 10⁶ tetraedre (README §12)
+G1:   # generatoare: intervale ale argumentelor
+  parallel_bars:  {length: [10, 200], width: [0.5, 10], gap: [0.5, 20]}
+  bar_over_plane: {length: [10, 200], width: [0.5, 10]}
+  crossing_bars:  {length: [10, 100], width: [0.5, 10], angle: [15, 90]}
+  bar_via:        {length: [10, 200], width: [1.5, 10], via_width: [0.5, 1.5]}
+G2: configs/families/g2.yaml   # set de test fix
+pilot: {G0: 2, G1: 2, G2: 8, convergence: G2}   # eșantioane per primitivă / generator; G2 = toate instanțele
+G2_full:  # setul de test complet: variante parametrice ale generatoarelor G2 (aceeași eșantionare Sobol)
+  meander:   {n_turns: {choices: [2, 3, 4, 5, 6]}, length: [20, 40], pitch: [5, 12], width: [1, 3]}
+  bus:       {n_lines: {choices: [2, 3, 4, 5]}, length: [20, 60], pitch: [4, 8], width: [1, 3], ground: {choices: [true, false]}}
+  spiral:    {n_turns: {choices: [1.5, 2.0, 2.5]}, outer: [30, 60], width: [1.5, 3], spacing: [1.5, 3]}
+  via_chain: {n_links: {choices: [2, 3, 4, 5, 6]}, link: [8, 16], width: [1.5, 3], via_width: [0.5, 1.2]}
+full:     # bugetul „mic” confirmat (2026-11-17): eșantioane per familie, împărțite egal pe primitive / generatoare
+  name: train_v1
+  G0: 200
+  G1: 200
+  G2: 30
+  fields: {every: 4, all_in: [G2]}   # câmpuri pe 1 din 4 eșantioane G0/G1 și pe tot G2; restul: mesh + etichete
+  # eșantioane al căror mesh coarse nu trece pragul de calitate (SICN < 0,05): înlocuite cu următoarele puncte Sobol,
+  # care primesc indicii următori (de ex. ground_plane_0040…); indicii celorlalte nu se schimbă
+  replaced: {ground_plane: [8, 20, 25, 34, 39], parallel_bars: [28, 44]}
+  keep_remote: true                  # datele complete rămân pe server; pe laptop: labels.json (R, L, C) + rezumat

@@ -1,0 +1,19 @@
+# Stack tehnologic ILUSTRATIV (placeholder pentru P0).
+# Nu reprezintă un proces real: valorile z / grosime sunt alese doar ca să existe două metale și o via.
+# Se înlocuiește cu stack-ul real (sau cu unul ilustrativ confirmat de utilizator) — vezi reports/P0.md, întrebări deschise.
+name: illustrative_2metal
+illustrative: true
+units: um
+
+materials:
+  copper:  {kind: conductor,  sigma_S_per_m: 5.8e7}   # aceeași valoare ca modelul aval conductor_in_l_emulation
+  air:     {kind: dielectric, eps_r: 1.0}
+  sio2:    {kind: dielectric, eps_r: 3.9}
+
+# mediul în care stau conductoarele (P0: omogen; straturile dielectrice intră din P1)
+background: air
+
+layers:
+  - {name: M1, kind: metal, z_bottom_um: 0.0, thickness_um: 1.0, material: copper}
+  - {name: V1, kind: via,   z_bottom_um: 1.0, thickness_um: 1.0, material: copper}
+  - {name: M2, kind: metal, z_bottom_um: 2.0, thickness_um: 1.0, material: copper}

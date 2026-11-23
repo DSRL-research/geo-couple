@@ -1,0 +1,17 @@
+# P2 — pilot de date + verificări + propunerea de buget. Seturile complete NU se generează aici.
+name: p2_pilot
+seed: 0
+dataset: configs/datasets/train.yaml
+export: configs/export/downstream.yaml
+executor: workers             # coada din geocouple/workers (docs/workers.md); `pool` = multiprocessing local
+where: remote                 # auto | local | remote (pentru executor: workers)
+workers: 1                    # doar pentru executor: pool; simulări în paralel în pilot (GetDP pe un fir fiecare); 1 = RAM liber ~4 GiB, vârf ~3.2 GiB
+convergence_scale: 0.85       # referința: dimensiunile mesh-ului fine × 0.85 (~1.6× tetraedre)
+fastcap_panel_um: 0.5
+downstream_runs:              # modele exportate rulate prin runner-ul platformei aval, cu parametri nenominali
+  gc_bar: {length: 80.0, width: 3.0}
+  gc_parallel_bars: {length: 30.0, gap: 3.0}
+plans:                        # variante de buget (număr de eșantioane per familie) evaluate din timpii măsurați
+  mic: {G0: 200, G1: 200, G2: 30}
+  mediu: {G0: 500, G1: 500, G2: 60}
+  mare: {G0: 1000, G1: 1000, G2: 100}

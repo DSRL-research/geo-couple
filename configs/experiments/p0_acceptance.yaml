@@ -1,0 +1,25 @@
+# P0 — teste de acceptanță: bară dreaptă G0.
+name: p0_acceptance
+seed: 0                       # nu există eșantionare aleatoare în P0; păstrat pentru uniformitate
+stack: configs/stack/default.yaml
+bar: {length_um: 50.0, width_um: 2.0, layer: M1}
+mesh:
+  cells_across: 4             # elemente pe dimensiunea transversală minimă a conductorului
+  growth: 0.15                # mărimea elementului în aer ≈ growth × distanța la conductor
+  shell_layers: 4             # straturi de prisme în învelișul de transformare
+domain:
+  r_in_factor: 1.5            # semilatura cubului de aer = factor × cea mai mare semi-extindere a geometriei
+  r_out_ratio: 1.25           # semilatura exterioară a învelișului = ratio × semilatura cubului de aer
+convergence:
+  cells_across: [2, 3, 4, 5]  # rafinare pentru L (bara nominală)
+box_sweep:
+  r_in_factors: [1.25, 1.5, 2.0, 3.0]
+  with_shell: [true, false]   # false = Dirichlet direct pe cubul de aer (fără transformare), doar pentru contrast
+  with_L: true                # L se calculează și el pe fiecare cutie (cu înveliș)
+cube:                         # verificare suplimentară a șablonului electrostatic: cub izolat (constantă de referință)
+  layer: M1
+  cells_across: 8
+  r_in_factors: [1.5, 3.0]
+thresholds:
+  rl_rel_err: 0.02            # R și L proprii față de formule
+  c_box_rel_spread: 0.01      # (max - min) / medie a lui C pe mărimile cutiei, cu înveliș de transformare

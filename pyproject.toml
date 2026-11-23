@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "geocouple"
+version = "0.0.1"
+description = "PoC: modele de învățare pentru geometrii 3D și extracția RLC cvasistatică (Gmsh + GetDP)"
+requires-python = ">=3.11"
+dependencies = ["numpy", "scipy", "pyyaml", "gmsh>=4.13"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["geocouple*"]
+
+[tool.setuptools.package-data]
+"geocouple.physics" = ["templates/*.pro"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["fem: rulează Gmsh + GetDP (mai lent)"]

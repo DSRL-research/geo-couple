@@ -1,0 +1,11 @@
+# G2 — compoziții (doar test). Instanțele P1 (verificare mesh + graf).
+family: G2
+instances:
+  - {generator: meander, params: {n_turns: 2, length: 30.0, pitch: 8.0}}
+  - {generator: meander, params: {n_turns: 5, length: 30.0, pitch: 8.0}}
+  - {generator: bus, params: {n_lines: 3, length: 40.0, pitch: 5.0, ground: true}}
+  - {generator: bus, params: {n_lines: 4, length: 40.0, pitch: 5.0, ground: true}}
+  - {generator: spiral, params: {n_turns: 1.5, outer: 40.0}}
+  - {generator: spiral, params: {n_turns: 2.0, outer: 40.0}}
+  - {generator: via_chain, params: {n_links: 3}}
+  - {generator: via_chain, params: {n_links: 5}}

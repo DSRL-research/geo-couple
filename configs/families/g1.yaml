@@ -1,0 +1,9 @@
+# G1 — perechi de primitive (antrenare termeni pereche). Instanțele P1 (verificare mesh + graf).
+family: G1
+instances:
+  - {generator: parallel_bars, params: {length: 40.0, width: 2.0, gap: 1.0}}
+  - {generator: parallel_bars, params: {length: 40.0, width: 2.0, gap: 4.0}}
+  - {generator: bar_over_plane, params: {length: 40.0, width: 2.0}}
+  - {generator: crossing_bars, params: {length: 30.0, width: 2.0, angle: 90.0}}
+  - {generator: crossing_bars, params: {length: 30.0, width: 2.0, angle: 45.0}}
+  - {generator: bar_via, params: {length: 30.0, width: 2.0, via_width: 1.0}}

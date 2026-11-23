@@ -1,0 +1,20 @@
+# Familia G0: primitive individuale. Intervalele sunt pentru eșantionarea din P2;
+# `nominal` este instanța folosită la testele P0.
+family: G0
+stack: configs/stack/default.yaml
+primitives:
+  bar:
+    nominal: {length_um: 50.0, width_um: 2.0, layer: M1}
+    ranges:  {length_um: [10.0, 200.0], width_um: [0.5, 10.0], layer: [M1, M2]}
+  corner:
+    nominal: {arm_a_um: 20.0, arm_b_um: 20.0, width_um: 2.0, layer: M1}
+    ranges:  {arm_a_um: [5.0, 100.0], arm_b_um: [5.0, 100.0], width_um: [0.5, 10.0], layer: [M1, M2]}
+  via:
+    nominal: {width_um: 1.0, layer: V1}
+    ranges:  {width_um: [0.5, 4.0], layer: [V1]}
+  spiral_segment:
+    nominal: {radius_um: 20.0, width_um: 2.0, sweep_deg: 90.0, layer: M2}
+    ranges:  {radius_um: [5.0, 100.0], width_um: [0.5, 10.0], sweep_deg: [15.0, 180.0], layer: [M1, M2]}
+  ground_plane:
+    nominal: {length_um: 60.0, width_um: 40.0, layer: M1}
+    ranges:  {length_um: [20.0, 200.0], width_um: [20.0, 200.0], layer: [M1]}   # ≤ 200 µm (README §12)

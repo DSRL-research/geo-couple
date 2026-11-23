@@ -1,0 +1,7 @@
+# G3 sintetic — celule gdsfactory pentru testarea importului GDS (celulele Cadence vin în P5).
+family: G3
+layer_map:            # (strat GDS, datatype) → strat din stack
+  - {gds: [1, 0], stack: M1}
+  - {gds: [2, 0], stack: V1}
+  - {gds: [3, 0], stack: M2}
+cells: [l_wire, meander_path, via_cross, arc_bend]

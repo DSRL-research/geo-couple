@@ -1,0 +1,13 @@
+# P1 — graf și mesh: G1, G2 și G3 sintetic generează mesh-uri conforme ≤ 10^6 tetraedre fără intervenție,
+# graful se validează, fiecare tetraedru are un nod.
+name: p1_acceptance
+seed: 0
+stack: configs/stack/default.yaml
+families: [configs/families/g1.yaml, configs/families/g2.yaml, configs/families/g3_synthetic.yaml]
+domain: {r_in_factor: 1.5, r_out_ratio: 1.25}
+coarse_mesh: {cells_across: 1, growth: 0.4, shell_layers: 4, port_refine: 0.5}
+adapt: {target_tets: 250000, min_size_um: 0.05, recalibrate_below: 0.7, max_recalibrations: 2}
+coupling: {threshold_um: 10.0, sample_spacing_um: 0.5}
+capacitance: {max_conductors: 5}   # matricea C pe coarse și fine (verificare fizică), dacă sunt ≤ atâtea conductoare
+thresholds:
+  max_tets: 1000000

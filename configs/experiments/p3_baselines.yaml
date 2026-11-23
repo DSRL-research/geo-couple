@@ -1,0 +1,38 @@
+# P3 — baseline-uri B0–B5 pe E1 și E2 (README §7–§9). Plan scurtat (2026-11-18): un singur seed, ~100 de epoci
+# pentru metodele pe câmp, câmpurile subeșantionate la 16–32k puncte per eșantion.
+name: p3_baselines
+seed: 0
+data_root: data/train_v1
+splits:
+  E1: {test_frac: 0.2}                 # G0 → G0 ținut deoparte, stratificat pe primitivă
+  E2: {}                               # G0 + G1 → G2
+learning_curve: [0.125, 0.25, 0.5, 1.0] # E1, fracțiuni din setul de antrenare (B1, B5)
+B1:
+  models: [gp, mlp_ensemble]           # circuit_ml.ml.surrogates.Surrogate (proiectul aval), neschimbat
+B5:
+  hidden: 64
+  layers: 4
+  epochs: 400
+  lr: 0.003
+  weight_decay: 0.0001
+fields:                                # B2 (MeshGraphNets), B3 (Transolver), B4 (GINO), pe server
+  methods: [B2, B3, B4]
+  points: 16000                        # puncte (centre de celule ale mesh-ului fine) per eșantion la antrenare și per bloc la inferență
+  epochs: 100
+  threads: 4                           # per metodă; cele trei rulează în paralel
+  mem_gb: 12                           # rezervare per metodă (MemoryMax = 1,5 × rezervarea)
+  lr: 0.001
+  hidden: 96
+limits_laptop: {threads: 4, mem_gb: 4}
+fields_v2:                             # v2 (2026-11-19): etichete p2.3 (solver reparat), câmpuri cu înveliș
+  methods: [B2, B3, B4]
+  points: 16000
+  epochs: 300
+  loss: energy                         # eroare L2 ponderată cu volumul + log-raportul energiei, pe E / J / B
+  val_frac: 0.1                        # validare din eșantioanele de antrenare cu câmpuri; early stopping
+  patience: 40                         # epoci fără îmbunătățire pe validare
+  val_every: 5
+  threads: 4
+  mem_gb: 12
+  lr: 0.001
+  hidden: 96

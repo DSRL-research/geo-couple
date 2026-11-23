@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GeoGraph",
+  "description": "Graful de primitive al unei geometrii (README §5.3). Lungimi în µm, M în nH, C în fF.",
+  "type": "object",
+  "required": ["schema_version", "name", "family", "stack", "nodes", "edges", "conductors", "clusters",
+               "cluster_edges", "labels"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "name": {"type": "string"},
+    "family": {"enum": ["G0", "G1", "G2", "G3"]},
+    "generator": {"type": "string"},
+    "generator_params": {"type": "object"},
+    "stack": {
+      "type": "object", "required": ["path", "name"],
+      "properties": {"path": {"type": "string"}, "name": {"type": "string"}}
+    },
+    "nodes": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "layer", "params", "placement", "physical_group", "ports", "conductor",
+                     "bbox_um", "centroid_um"],
+        "properties": {
+          "id": {"type": "integer", "minimum": 1, "maximum": 999},
+          "type": {"enum": ["bar", "corner", "via", "spiral_segment", "ground_plane", "polygon"]},
+          "layer": {"type": "string"},
+          "params": {"type": "object"},
+          "placement": {
+            "type": "object", "required": ["x_um", "y_um", "angle_deg"],
+            "properties": {"x_um": {"type": "number"}, "y_um": {"type": "number"},
+                           "angle_deg": {"type": "number"}}
+          },
+          "physical_group": {"type": "integer"},
+          "ports": {
+            "type": "array",
+            "items": {
+              "type": "object", "required": ["id", "physical_group", "center_um", "normal"],
+              "properties": {"id": {"type": "string"}, "physical_group": {"type": "integer"},
+                             "center_um": {"$ref": "#/$defs/vec3"}, "normal": {"$ref": "#/$defs/vec3"}}
+            }
+          },
+          "conductor": {"type": "integer"},
+          "bbox_um": {"type": "array", "items": {"$ref": "#/$defs/vec3"}, "minItems": 2, "maxItems": 2},
+          "centroid_um": {"$ref": "#/$defs/vec3"},
+          "n_tets": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["src", "dst", "kind"],
+        "properties": {
+          "src": {"type": "integer"}, "dst": {"type": "integer"},
+          "kind": {"enum": ["contact", "coupling"]},
+          "ports": {"type": "object"},
+          "physical_group": {"type": "integer"},
+          "area_um2": {"type": "number", "minimum": 0},
+          "distance_um": {"type": "number", "minimum": 0},
+          "analytic": {"$ref": "#/$defs/analytic"}
+        },
+        "allOf": [
+          {"if": {"properties": {"kind": {"const": "contact"}}},
+           "then": {"required": ["ports", "physical_group", "area_um2"]}},
+          {"if": {"properties": {"kind": {"const": "coupling"}}},
+           "then": {"required": ["distance_um", "analytic"]}}
+        ]
+      }
+    },
+    "conductors": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "required": ["id", "nodes", "ports", "skin_group"],
+        "properties": {
+          "id": {"type": "integer"},
+          "nodes": {"type": "array", "items": {"type": "integer"}, "minItems": 1},
+          "ports": {
+            "type": ["object", "null"], "required": ["hi", "lo"],
+            "properties": {"hi": {"$ref": "#/$defs/port_ref"}, "lo": {"$ref": "#/$defs/port_ref"}}
+          },
+          "skin_group": {"type": "integer"},
+          "return_path": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "clusters": {
+      "type": "array",
+      "items": {"type": "object", "required": ["id", "nodes", "centroid_um"],
+                "properties": {"id": {"type": "integer"}, "nodes": {"type": "array", "items": {"type": "integer"}},
+                               "centroid_um": {"$ref": "#/$defs/vec3"}}}
+    },
+    "cluster_edges": {
+      "type": "array",
+      "items": {"type": "object", "required": ["src", "dst", "distance_um", "analytic"],
+                "properties": {"src": {"type": "integer"}, "dst": {"type": "integer"},
+                               "distance_um": {"type": "number"}, "analytic": {"$ref": "#/$defs/analytic"}}}
+    },
+    "coupling": {"type": "object"},
+    "mesh": {"type": "object"},
+    "labels": {"type": "object"}
+  },
+  "$defs": {
+    "vec3": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3},
+    "port_ref": {"type": "object", "required": ["node", "port", "physical_group"],
+                 "properties": {"node": {"type": "integer"}, "port": {"type": "string"},
+                                "physical_group": {"type": "integer"}}},
+    "analytic": {"type": "object", "required": ["M_nH", "C_fF", "model"],
+                 "properties": {"M_nH": {"type": ["number", "null"]}, "C_fF": {"type": ["number", "null"]},
+                                "model": {"type": "string"}}}
+  }
+}
