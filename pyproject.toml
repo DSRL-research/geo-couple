@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "geocouple"
 version = "0.1.0"
 description = "Learning RLC extraction for 3D interconnect geometries composed of primitives, with Gmsh + GetDP FEM labels"
+readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "Mihai Daian" }]
 keywords = ["interconnect", "RLC extraction", "finite elements", "graph neural networks", "GDS"]
