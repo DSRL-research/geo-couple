@@ -19,12 +19,9 @@ from pathlib import Path
 import gmsh
 import numpy as np
 
-from geocouple import PROJECT_ROOT
 from geocouple.geometry.compose import Assembly
 from geocouple.stack import Stack
-
-FASTHENRY = PROJECT_ROOT / "third_party" / "FastHenry2" / "bin" / "fasthenry"
-FASTCAP = PROJECT_ROOT / "third_party" / "FastCap2" / "bin" / "fastcap"
+from geocouple.tools import find_fast_solver
 
 
 # --- FastHenry ------------------------------------------------------------------------------------------------------
@@ -115,7 +112,7 @@ def fasthenry_input(asm: Assembly, stack: Stack, filaments: tuple[int, int] = (3
 def run_fasthenry(asm: Assembly, stack: Stack, filaments=(3, 3), freq: float = 1.0) -> dict:
     with tempfile.TemporaryDirectory() as tmp:
         (Path(tmp) / "g.inp").write_text(fasthenry_input(asm, stack, filaments, freq))
-        res = subprocess.run([str(FASTHENRY), "g.inp"], cwd=tmp, capture_output=True, text=True, timeout=1800)
+        res = subprocess.run([str(find_fast_solver("fasthenry")), "g.inp"], cwd=tmp, capture_output=True, text=True, timeout=1800)
         if res.returncode != 0:
             raise RuntimeError(res.stdout[-2000:] + res.stderr[-2000:])
         txt = (Path(tmp) / "Zc.mat").read_text()
@@ -175,7 +172,7 @@ def run_fastcap(asm: Assembly, stack: Stack, size_um: float = 0.5, eps_r: float 
             lines.append(f"T c{cid} " + " ".join(f"{v:.9e}" for v in tri.ravel()))
     with tempfile.TemporaryDirectory() as tmp:
         (Path(tmp) / "g.qui").write_text("\n".join(lines) + "\n")
-        res = subprocess.run([str(FASTCAP), f"-p{eps}", "g.qui"], cwd=tmp, capture_output=True, text=True,
+        res = subprocess.run([str(find_fast_solver("fastcap")), f"-p{eps}", "g.qui"], cwd=tmp, capture_output=True, text=True,
                              timeout=3600)
         if res.returncode != 0:
             raise RuntimeError(res.stdout[-2000:] + res.stderr[-2000:])

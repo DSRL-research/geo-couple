@@ -37,3 +37,22 @@ def find_tools() -> Tools:
         raise FileNotFoundError("GetDP not found: run scripts/get_onelab.sh, or set GETDP_BIN or ONELAB_ROOT, "
                                 "or put getdp on PATH (geocouple doctor shows what was found).")
     return Tools(getdp=getdp, gmsh=gmsh)
+
+
+FAST_SOLVERS = {  # name -> (environment override, binary built by scripts/build_fast_solvers.sh)
+    "fasthenry": ("FASTHENRY_BIN", PROJECT_ROOT / "third_party" / "FastHenry2" / "bin" / "fasthenry"),
+    "fastcap": ("FASTCAP_BIN", PROJECT_ROOT / "third_party" / "FastCap2" / "bin" / "fastcap"),
+}
+
+
+def find_fast_solver(name: str, required: bool = True) -> Path | None:
+    """FastHenry / FastCap (optional, only for the independent references of P0–P2).
+
+    Order: $FASTHENRY_BIN / $FASTCAP_BIN, third_party/<solver>/bin, PATH.
+    """
+    env, built = FAST_SOLVERS[name]
+    path = _first_existing(os.environ.get(env), built, shutil.which(name))
+    if path is None and required:
+        raise FileNotFoundError(f"{name} not found: build it with scripts/build_fast_solvers.sh, or set {env}, "
+                                f"or put {name} on PATH. It is only needed for the FastHenry / FastCap references.")
+    return path
