@@ -1,8 +1,8 @@
-"""Simularea unui eșantion cu cache: mesh coarse/fine → R, L, C pe ambele → GeoGraph → VTKHDF + etichete.
+"""Simulating one sample, with a cache: coarse / fine mesh → R, L, C on both → GeoGraph → VTKHDF + labels.
 
-Cheia de cache este hash-ul (asamblare, configurație de pipeline, stack, versiunea codului de simulare): același
-eșantion nu se simulează a doua oară. Folderul de lucru (mesh-uri .msh, fișiere GetDP) se șterge după scrierea
-eșantionului, dacă `keep_work` e fals; eșantionul stocat conține tot ce trebuie pentru învățare.
+The cache key hashes (assembly, pipeline settings, stack, SIM_VERSION of the simulation code): a sample is not
+simulated twice. The work folder (.msh meshes, GetDP files) is deleted once the sample is written, unless
+`keep_work`; the stored sample holds everything the learning step needs.
 """
 
 from __future__ import annotations
@@ -29,6 +29,7 @@ SIM_VERSION = "p2.3"  # bump when anything that changes labels changes (p2.3: SP
 
 
 def cache_key(asm: Assembly, spec: PipelineSpec, coupling: CouplingSpec, stack: Stack, orders=(2, 1)) -> str:
+    """16 hex digits identifying the labels of a sample (labels.json stores it; a mismatch means re-simulate)."""
     payload = {"primitives": [p.to_dict() for p in asm.primitives], "orders": orders,
                "conductors": [dataclasses.asdict(c) for c in asm.conductors],
                "spec": dataclasses.asdict(spec), "coupling": dataclasses.asdict(coupling),

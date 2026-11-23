@@ -1,4 +1,4 @@
-"""Stack-ul tehnologic: strat → z, grosime, material, σ, ε (configs/stack/*.yaml)."""
+"""The technology stack: layer → z range, thickness, material, σ, ε (configs/stack/*.yaml)."""
 
 from __future__ import annotations
 
@@ -51,6 +51,7 @@ class Stack:
 
 
 def load_stack(path: str | Path) -> Stack:
+    """Read a stack YAML (layers with z_bottom_um / thickness_um / material, materials with sigma and eps_r)."""
     path = Path(path)
     if not path.is_absolute():
         path = PROJECT_ROOT / path

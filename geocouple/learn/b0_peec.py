@@ -1,16 +1,16 @@
-"""B0 — formule analitice (docs/dev/design.md §7): R, L și C dintr-o descompunere PEEC grosieră a asamblării, fără învățare.
+"""B0 — analytic formulas (docs/dev/design.md §7): R, L and C from a coarse PEEC decomposition, no learning.
 
-- Fiecare primitivă devine segmente drepte pe linia ei mediană (secțiune w × t; via: w × w, între liniile mediane ale
-  metalelor pe care le atinge, cu nod de racord pe linia metalului). Nodurile care coincid se unesc (contactele).
-- **R:** rețea de rezistențe R = l / (σ w t) (formula barei), curent de 1 A între porturi → R de port și curenții pe
-  segmente (analiză nodală).
-- **L:** inductanțe parțiale Ruehli: proprii exacte pentru bara dreptunghiulară (`analytic.partial_self_inductance_bar`),
-  mutuale Neumann între filamentele liniilor mediane (închis pentru segmente paralele, cuadratură Gauss pentru
-  orientări oarecare, zero pentru segmente perpendiculare); L_kl = I_kᵀ L_p I_l, ca în FastHenry cu un filament.
-- **C:** coeficienți de potențial medii pe segmente subîmpărțite (aceeași integrală Neumann, 1/(4πε l_i l_j) ∫∫ 1/r;
-  termenul propriu pe raza echivalentă a secțiunii, (w + t)/4), conductoarele echipotențiale: C = Bᵀ P⁻¹ B.
+- Every primitive becomes straight segments on its centre line (section w × t; a via: w × w, between the centre lines
+  of the metals it touches, with a tap node on the metal line). Coinciding nodes are merged (the contacts).
+- **R:** resistor network R = l / (σ w t) (bar formula), 1 A between the ports → port resistance and segment currents
+  (nodal analysis).
+- **L:** Ruehli partial inductances: exact self terms of the rectangular bar (`analytic.partial_self_inductance_bar`),
+  Neumann mutuals between the centre-line filaments (closed form for parallel segments, Gauss quadrature otherwise,
+  zero for perpendicular ones); L_kl = I_kᵀ L_p I_l, as FastHenry with one filament.
+- **C:** average potential coefficients on subdivided segments (the same Neumann integral, 1/(4πε l_i l_j) ∫∫ 1/r;
+  self term on the equivalent radius of the section, (w + t)/4), equipotential conductors: C = Bᵀ P⁻¹ B.
 
-Este pragul minim: fără efecte de margine 3D detaliate, fără distribuția neuniformă a curentului/sarcinii pe secțiune.
+This is the minimal baseline: no detailed 3D fringing, no non-uniform current / charge over the section.
 """
 
 from __future__ import annotations
@@ -286,6 +286,7 @@ def capacitance(asm, stack: Stack, max_pieces: int = 24) -> tuple[list, list]:
 
 
 def predict(asm, stack: Stack) -> dict:
+    """R [Ω] per driven conductor, L [nH] between driven conductors, C [fF] (Maxwell matrix) between all conductors."""
     R, L, conds = rl(asm, stack)
     C, conds_c = capacitance(asm, stack)
     return {"R_ohm": R, "L_nH": L, "C_fF": C, "conductors": conds, "conductors_C": conds_c}

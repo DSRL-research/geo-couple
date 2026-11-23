@@ -1,4 +1,4 @@
-"""Schema GeoGraph: construcție din asamblare + model FEM, validare (JSON Schema + reguli), (de)serializare JSON."""
+"""The GeoGraph schema: built from an assembly (+ the FEM model when meshed), validated (JSON Schema + rules), JSON I/O."""
 
 from __future__ import annotations
 
@@ -36,6 +36,9 @@ def _port_on(port_center, q: Primitive, stack: Stack, tol: float) -> bool:
 
 
 def build_geograph(asm: Assembly, stack: Stack, info: ModelInfo | None, spec: CouplingSpec = CouplingSpec()) -> dict:
+    """Nodes = primitives (type, layer, parameters, placement, ports, conductor), edges = contacts and coupling
+    (gap ≤ spec.threshold_um, with the Neumann coefficient), conductors with their ports. `info` (the meshed model)
+    adds the FEM contacts and the tetrahedra per primitive; without it contacts come from the geometry."""
     prims = asm.primitives
     by_id = {p.id: p for p in prims}
     n_tets = {}

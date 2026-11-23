@@ -1,12 +1,12 @@
-"""Import GDSII/OASIS → poligoane pe straturi → primitive extrudate pe stack (docs/dev/design.md §5.2).
+"""GDSII / OASIS import → polygons per layer → primitives extruded on the stack (docs/dev/design.md §5.2).
 
-- Poligoanele de pe același strat se unesc (shapely), apoi fiecare componentă se descompune:
-  rectiliniar → dreptunghiuri (felii orizontale, apoi unirea feliilor cu aceeași extindere în x) → noduri `bar`;
-  altfel → un nod `polygon` (contur extrudat), marcat ca atare.
-- Conductoarele: componentele conexe ale grafului „se ating” (același strat, margine comună) ∪ „via peste metal”
-  (strat via adiacent în z, arie de suprapunere > 0).
-- Porturile externe ale unui conductor (pentru excitația DC): cele două capete libere de bară cele mai depărtate;
-  un conductor fără capete libere de bară nu primește porturi (raportat).
+- Polygons on the same layer are merged (shapely), then each component is decomposed:
+  rectilinear → rectangles (horizontal slabs, then slabs with the same x extent merged) → `bar` nodes;
+  otherwise → one `polygon` node (extruded outline), flagged as such.
+- Conductors: connected components of the "touch" graph (same layer, shared edge) ∪ "via on metal"
+  (via layer adjacent in z, overlap area > 0).
+- External ports of a conductor (for the DC excitation): the two free bar ends farthest apart; a conductor without
+  free bar ends gets no ports (reported).
 """
 
 from __future__ import annotations
@@ -27,6 +27,7 @@ GRID = 1e-6  # µm: coordinates are snapped to 1 pm before decomposition
 
 
 def read_layers(path: Path, layer_map: dict[tuple[int, int], str], cell: str | None = None) -> dict[str, list]:
+    """Polygons of the top cell (flattened) per stack layer; (layer, datatype) pairs not in layer_map are dropped."""
     lib = gdstk.read_oas(str(path)) if str(path).lower().endswith(".oas") else gdstk.read_gds(str(path))
     if cell:
         top = next(c for c in lib.cells if c.name == cell)
@@ -77,6 +78,7 @@ def rectangles(p: Polygon) -> list[tuple[float, float, float, float]]:
 
 
 def assembly_from_layers(name: str, layers: dict[str, list], stack: Stack) -> tuple[Assembly, dict]:
+    """Primitives, conductors and ports from the polygons of each layer; the report counts nodes and problems."""
     asm = Assembly(name, "G3", "gds_import", {})
     shapes = []  # (primitive, shapely footprint)
     report = {"polygons_in": sum(len(v) for v in layers.values()), "rect_nodes": 0, "polygon_nodes": 0}
@@ -183,4 +185,5 @@ def assembly_from_layers(name: str, layers: dict[str, list], stack: Stack) -> tu
 
 def import_gds(path: Path, layer_map: dict[tuple[int, int], str], stack: Stack, name: str | None = None,
                cell: str | None = None) -> tuple[Assembly, dict]:
+    """Layout file (.gds or .oas) → (Assembly of family G3, import report). layer_map: (layer, datatype) → stack layer."""
     return assembly_from_layers(name or Path(path).stem, read_layers(path, layer_map, cell), stack)

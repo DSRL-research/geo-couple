@@ -1,8 +1,8 @@
-"""Compunerea primitivelor: lipire pe porturi și generatoarele familiilor G1 (perechi) și G2 (compoziții).
+"""Composing primitives: gluing at ports, and the generators of families G1 (pairs) and G2 (compositions).
 
-Primitivele se așază astfel încât porturile lipite să coincidă (aceeași față, normale opuse) sau, pentru via, astfel
-încât fața via să stea pe fața metalului. Contactele efective se detectează după fragmentarea booleană, din fețele
-comune (geometry/model.py), deci și geometriile importate din GDS primesc aceleași muchii de contact.
+Primitives are placed so that glued ports coincide (same face, opposite normals) or, for a via, so that the via face
+sits on the metal face. The actual contacts are detected after the boolean fragmentation, from the shared faces
+(geometry/model.py), so geometries imported from GDS get the same contact edges.
 """
 
 from __future__ import annotations
@@ -198,6 +198,8 @@ def from_config(family_cfg: dict) -> list[Assembly]:
 
 
 def check_assembly(asm: Assembly, stack: Stack) -> None:
+    """Raise ValueError unless ids are 1..N and every primitive belongs to exactly one conductor; KeyError for a layer
+    missing from the stack."""
     ids = [p.id for p in asm.primitives]
     if ids != list(range(1, len(ids) + 1)):
         raise ValueError("primitive ids must be 1..N")

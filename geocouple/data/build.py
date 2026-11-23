@@ -1,4 +1,4 @@
-"""Construcția unui eșantion: mesh coarse din graf → ZZ → mesh fine (cu recalibrarea numărului de tetraedre)."""
+"""Building a sample's meshes: coarse mesh → ZZ error indicator → adapted fine mesh (recalibrated tetrahedron count)."""
 
 from __future__ import annotations
 
@@ -13,6 +13,8 @@ from geocouple.stack import Stack
 
 @dataclass
 class PipelineSpec:
+    """Meshing settings: domain (air box / shell), coarse mesh, adaptation target; from the `pipeline:` config key."""
+
     domain: DomainSpec = field(default_factory=DomainSpec)
     coarse: MeshSpec = field(default_factory=lambda: MeshSpec(cells_across=1, growth=0.4, port_refine=0.5,
                                                               min_quality=0.05))
