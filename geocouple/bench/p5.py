@@ -13,12 +13,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import time
 from pathlib import Path
 
 import yaml
 
 from geocouple import PROJECT_ROOT
+
+_LOG = logging.getLogger(__name__)
 
 G3_ROOT = PROJECT_ROOT / "data" / "g3_v1"
 GDS_DIR = PROJECT_ROOT / "data" / "work" / "g3_gds"
@@ -27,7 +30,7 @@ DATASET = PROJECT_ROOT / "configs" / "datasets" / "train.yaml"
 
 
 def log(msg):
-    print(f"[p5 {time.strftime('%H:%M:%S')}] {msg}", flush=True)
+    _LOG.info(msg)
 
 
 def g3_assemblies():
@@ -99,6 +102,8 @@ def g3_run(where: str = "local", shard: str = "0/1"):
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("stage", choices=["g3-jobs", "g3-run", "e6-b0", "e6", "e4", "e5", "report"])
     ap.add_argument("--dry-run", action="store_true")

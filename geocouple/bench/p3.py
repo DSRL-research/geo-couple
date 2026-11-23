@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import logging
 import os
 import shutil
 import sys
@@ -26,11 +27,13 @@ import yaml
 from geocouple import PROJECT_ROOT
 from geocouple.learn import dataset as ds
 
+_LOG = logging.getLogger(__name__)
+
 RUNS = PROJECT_ROOT / "runs" / "p3_baselines"
 
 
 def log(msg):
-    print(f"[p3 {time.strftime('%H:%M:%S')}] {msg}", flush=True)
+    _LOG.info(msg)
 
 
 def latest() -> Path:
@@ -118,6 +121,8 @@ def b5(run: Path):
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("stage", choices=["init", "b0", "b1", "b5", "fields-collect", "report"])
     ap.add_argument("config", nargs="?", type=Path, default=PROJECT_ROOT / "configs" / "experiments" / "p3_baselines.yaml")

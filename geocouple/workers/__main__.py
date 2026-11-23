@@ -33,6 +33,8 @@ def _summary(st: dict) -> str:
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser(prog="python -m geocouple.workers")
     sub = ap.add_subparsers(dest="cmd", required=True)
     for c in ("deploy", "start", "stop", "status", "sync"):

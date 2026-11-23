@@ -909,6 +909,8 @@ def serve(port: int):
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["build", "serve"])
     ap.add_argument("--port", type=int, default=8765)

@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import logging
 import subprocess
 import sys
 import time
@@ -25,12 +26,14 @@ from geocouple import PROJECT_ROOT, REPORTS_DIR
 from geocouple.data.sampling import full_assemblies, keeps_fields
 from geocouple.stack import load_stack
 
+_LOG = logging.getLogger(__name__)
+
 DATASET = PROJECT_ROOT / "configs" / "datasets" / "train.yaml"
 BEGIN, END = "<!-- p2_full:begin -->", "<!-- p2_full:end -->"
 
 
 def log(msg):
-    print(f"[p2_full {time.strftime('%H:%M:%S')}] {msg}", flush=True)
+    _LOG.info(msg)
 
 
 def _dir_bytes(p: Path) -> int:
@@ -224,6 +227,8 @@ def run(per_kind: int = 2, sync: bool = True, tests: bool = True) -> Path:
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("--subset-per-kind", type=int, default=2)
     ap.add_argument("--no-sync", action="store_true")

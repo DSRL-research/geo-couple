@@ -7,12 +7,15 @@ result/: preds.json (RLC + eroare de câmp per eșantion de test, timpi, curba d
 from __future__ import annotations
 
 import json
+import logging
 import os
 import sys
 import time
 from pathlib import Path
 
 import yaml
+
+_LOG = logging.getLogger(__name__)
 
 
 def _root(inputs: Path) -> Path:
@@ -29,7 +32,7 @@ def run(inputs: Path, result: Path, job: dict) -> dict:
     t0 = time.perf_counter()
 
     def log(msg):
-        print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
+        _LOG.info(msg)
 
     def load(names):
         out = []

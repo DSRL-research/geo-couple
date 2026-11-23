@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import logging
 import os
 import shutil
 import signal
@@ -26,6 +27,8 @@ import yaml
 
 from geocouple.workers.config import DEFAULTS
 
+_LOG = logging.getLogger(__name__)
+
 STATES = ("pending", "running", "done", "failed")
 PAGE = os.sysconf("SC_PAGE_SIZE")
 
@@ -35,7 +38,7 @@ def now() -> str:
 
 
 def log(msg: str):
-    print(f"[worker {time.strftime('%Y-%m-%d %H:%M:%S')}] {msg}", flush=True)
+    _LOG.info(msg)
 
 
 # --- machine state --------------------------------------------------------------------------------------------------
@@ -434,6 +437,8 @@ def status(root: Path) -> dict:
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", type=Path, default=Path("~/geo-couple"))
     ap.add_argument("cmd", choices=["run", "status"])

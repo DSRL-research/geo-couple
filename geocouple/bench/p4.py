@@ -13,6 +13,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import logging
 import shutil
 import time
 from pathlib import Path
@@ -22,13 +23,15 @@ import yaml
 from geocouple import PROJECT_ROOT
 from geocouple.learn import dataset as ds
 
+_LOG = logging.getLogger(__name__)
+
 RUNS = PROJECT_ROOT / "runs" / "p4_composition"
 CONFIG = PROJECT_ROOT / "configs" / "experiments" / "p4_composition.yaml"
 TORCH_PATH = "/usr/local/lib/python3.12/dist-packages"
 
 
 def log(msg):
-    print(f"[p4 {time.strftime('%H:%M:%S')}] {msg}", flush=True)
+    _LOG.info(msg)
 
 
 def latest() -> Path:
@@ -114,6 +117,8 @@ def collect(run: Path):
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("stage", choices=["init", "submit", "local", "collect", "report"])
     ap.add_argument("variant", nargs="?")

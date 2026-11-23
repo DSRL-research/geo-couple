@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import logging
 import os
 import platform
 import shutil
@@ -30,6 +31,8 @@ from geocouple.physics.extract import (capacitance_matrix, check_physical_matrix
                                       run_getdp, solve_rl, write_regions)
 from geocouple.stack import load_stack
 from geocouple.tools import find_tools
+
+_LOG = logging.getLogger(__name__)
 
 UM = 1e-6
 
@@ -156,7 +159,7 @@ def run(config_path: Path, out_root: Path | None = None) -> Path:
     }
 
     def log(msg):
-        print(f"[p0 {time.strftime('%H:%M:%S')}] {msg}", flush=True)
+        _LOG.info(msg)
 
     # 1) nominal bar: R and L against the formulas
     prims, conds = _bar(bar_cfg)
@@ -279,6 +282,8 @@ def fields_and_gallery(out: Path, cfg: dict, stack) -> None:
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("config", type=Path)
     ap.add_argument("--fields-only", type=Path, help="existing run folder: only (re)compute fields and gallery")

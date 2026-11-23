@@ -14,6 +14,7 @@ import datetime as dt
 import hashlib
 import importlib
 import json
+import logging
 import os
 import platform
 import resource
@@ -93,7 +94,7 @@ def run(job_dir: Path) -> int:
         code = 0
     except Exception as e:  # noqa: BLE001 - the error goes into run.json
         info.update(status="error", error=f"{type(e).__name__}: {e}", traceback=traceback.format_exc())
-        print(info["traceback"], file=sys.stderr, flush=True)
+        logging.getLogger(__name__).error(info["traceback"])
         code = 1
     info["wall_s"] = time.perf_counter() - t0
     info["peak_rss_mib"] = {"self": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024,
@@ -169,4 +170,6 @@ def assembly_from_dict(d: dict):
 
 
 if __name__ == "__main__":
+    from geocouple import _logging
+    _logging.setup()
     sys.exit(run(Path(sys.argv[1])))

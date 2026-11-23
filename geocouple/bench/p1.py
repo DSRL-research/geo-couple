@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import logging
 import shutil
 import subprocess
 import sys
@@ -35,9 +36,11 @@ from geocouple.mesh.check import conformity, element_coverage
 from geocouple.physics.extract import capacitance_matrix, check_physical_matrix
 from geocouple.stack import load_stack
 
+_LOG = logging.getLogger(__name__)
+
 
 def log(msg):
-    print(f"[p1 {time.strftime('%H:%M:%S')}] {msg}", flush=True)
+    _LOG.info(msg)
 
 
 def instances(cfg: dict, stack, out: Path):
@@ -164,6 +167,8 @@ def run(config_path: Path) -> Path:
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("config", type=Path)
     run(ap.parse_args().config)

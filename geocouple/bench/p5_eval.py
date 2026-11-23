@@ -6,6 +6,7 @@ Mediile: E4 / E6 au nevoie de scikit-learn și torch (mediul cu torch), E5 și r
 from __future__ import annotations
 
 import json
+import logging
 import math
 import time
 from pathlib import Path
@@ -16,12 +17,14 @@ import yaml
 from geocouple import PROJECT_ROOT
 from geocouple.learn import dataset as ds
 
+_LOG = logging.getLogger(__name__)
+
 RUNS = PROJECT_ROOT / "runs" / "p5_transfer"
 G3_ROOT = PROJECT_ROOT / "data" / "g3_v1"
 
 
 def log(msg):
-    print(f"[p5 {time.strftime('%H:%M:%S')}] {msg}", flush=True)
+    _LOG.info(msg)
 
 
 def _stamp() -> Path:

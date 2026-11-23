@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import json
+import logging
 import sys
 import time
 from pathlib import Path
 
 import numpy as np
 import yaml
+
+_LOG = logging.getLogger(__name__)
 
 
 def run(inputs: Path, result: Path, job: dict) -> dict:
@@ -23,7 +26,7 @@ def run(inputs: Path, result: Path, job: dict) -> dict:
         t0 = time.perf_counter()
         preds, meta = cp.train(cfg["variant"]["model"], data, loc, bundle["train"], bundle["test"],
                                {**cfg["train"], **{k: v for k, v in cfg["variant"].items() if k != "model"}}, seed,
-                               log=lambda m: print(f"[{time.strftime('%H:%M:%S')}] s{seed} {m}", flush=True))
+                               log=lambda m: _LOG.info("s%s %s", seed, m))
         (result / f"preds_s{seed}.json").write_text(json.dumps({"preds": preds, "meta": meta}, default=float))
         out[f"s{seed}"] = {"train_s": meta["train_s"], "final_loss": meta["loss"][-1],
                            "wall_s": time.perf_counter() - t0}

@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import logging
 import multiprocessing as mp
 import os
 import shutil
@@ -32,10 +33,11 @@ from geocouple.physics.fast import run_fastcap, run_fasthenry
 from geocouple.stack import load_stack
 
 DOWNSTREAM = Path.home() / "work" / "demo_circuit"
+_LOG = logging.getLogger(__name__)
 
 
 def log(msg):
-    print(f"[p2 {time.strftime('%H:%M:%S')}] {msg}", flush=True)
+    _LOG.info(msg)
 
 
 # --- downstream export ----------------------------------------------------------------------------------------------
@@ -316,6 +318,8 @@ def run(config_path: Path) -> Path:
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("config", type=Path)
     run(ap.parse_args().config)

@@ -9,9 +9,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 from pathlib import Path
 
 import yaml
+
+_LOG = logging.getLogger(__name__)
 
 from geocouple import PROJECT_ROOT
 from geocouple.learn import dataset as ds
@@ -68,8 +71,8 @@ def submit(run: Path, version: str = "v2"):
     r = Remote()
     r.deploy()
     sent = r.submit(js)
-    print("submitted:", sent)
-    print(r.start())
+    _LOG.info("submitted: %s", sent)
+    _LOG.info(r.start())
     (run / f"fields_jobs_{version}.json").write_text(json.dumps([d.name for d in js]))
 
 
@@ -105,7 +108,7 @@ def _collect(run: Path, job_ids: list[str], version: str, by: dict):
             continue
         f = d / "result" / "preds.json"
         if not f.exists():
-            print(f"{jid} ({sp['method']} {sp['experiment']}): no result yet")
+            _LOG.info(f"{jid} ({sp['method']} {sp['experiment']}): no result yet")
             continue
         res = json.loads(f.read_text())
         preds = {}
@@ -129,10 +132,12 @@ def _collect(run: Path, job_ids: list[str], version: str, by: dict):
                     "threads": res.get("threads"), "host": (run_json.get("worker") or {}).get("host"),
                     "peak_rss_mib": (run_json.get("worker") or {}).get("peak_tree_rss_mib"),
                     "wall_s": run_json.get("wall_s")})
-        print(f"{sp['method']}_{sp['experiment']}{suffix}: {len(preds)} predictions")
+        _LOG.info(f"{sp['method']}_{sp['experiment']}{suffix}: {len(preds)} predictions")
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["submit", "collect", "submit-shell"])
     ap.add_argument("--run", type=Path)
@@ -186,8 +191,8 @@ def submit_shell(run: Path):
     r = Remote()
     r.deploy()
     sent = r.submit(js)
-    print("submitted:", len(sent))
-    print(r.start())
+    _LOG.info("submitted: %d", len(sent))
+    _LOG.info(r.start())
     (run / "shell_jobs.json").write_text(json.dumps([d.name for d in js]))
 
 

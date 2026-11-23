@@ -31,6 +31,8 @@ def read_values(params_txt: Path, names: list[str]) -> dict[str, float]:
 
 
 def main():
+    from geocouple import _logging
+    _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("--workdir", required=True, type=Path)
     ap.add_argument("--threads", type=int, default=1)
