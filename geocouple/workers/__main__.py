@@ -49,7 +49,7 @@ def main():
     a = ap.parse_args()
     cfg = wconfig.load()
 
-    if a.cmd == "submit-full":  # every job on the server; the data stays there (README §12)
+    if a.cmd == "submit-full":  # every job on the server; the data stays there (docs/dev/design.md §12)
         shell = None
         if a.shell_from:
             sp = json.loads(open(a.shell_from).read())

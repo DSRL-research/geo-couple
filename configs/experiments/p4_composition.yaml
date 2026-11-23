@@ -1,4 +1,4 @@
-# P4 — S0, G1, A1 pe E2 și E3 (README §7–§9), pe data/train_v1 (etichete p2.3).
+# P4 — S0, G1, A1 pe E2 și E3 (docs/dev/design.md §7–§9), pe data/train_v1 (etichete p2.3).
 name: p4_composition
 data_root: data/train_v1
 features: data/work/p4_features          # geocouple.learn.superpos (nucleul analitic pe primitive)

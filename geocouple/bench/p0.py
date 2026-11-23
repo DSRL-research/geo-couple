@@ -22,7 +22,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from geocouple import PROJECT_ROOT
+from geocouple import PROJECT_ROOT, REPORTS_DIR
 from geocouple.geometry.model import Conductor, DomainSpec, MeshSpec, build_model
 from geocouple.geometry.primitives import Primitive
 from geocouple.physics import analytic
@@ -243,7 +243,7 @@ def run(config_path: Path, out_root: Path | None = None) -> Path:
     (out / "results.json").write_text(json.dumps(results, indent=2))
     fields_and_gallery(out, cfg, stack)
     from geocouple.bench.report_p0 import write_report
-    write_report(out, PROJECT_ROOT / "reports" / "P0.md")
+    write_report(out, REPORTS_DIR / "P0.md")
     from geocouple.viz import dashboard
     dashboard.build()
     log(f"results in {out}")

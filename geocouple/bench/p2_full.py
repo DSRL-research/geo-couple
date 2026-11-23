@@ -1,4 +1,4 @@
-"""P2 — generarea completă (buget „mic”, README §12): rezumatul după ce joburile de pe server s-au terminat.
+"""P2 — generarea completă (buget „mic”, docs/dev/design.md §12): rezumatul după ce joburile de pe server s-au terminat.
 
 Aduce rezultatele (doar rezumatele: labels.json cu R, L, C; datele complete rămân pe server), numără eșantioanele
 OK / eșuate, verifică L și C (simetrice, pozitiv definite), compară cu FastHenry / FastCap pe un subset, măsoară discul
@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from geocouple import PROJECT_ROOT
+from geocouple import PROJECT_ROOT, REPORTS_DIR
 from geocouple.data.sampling import full_assemblies, keeps_fields
 from geocouple.stack import load_stack
 
@@ -145,7 +145,7 @@ def report_section(res: dict, rel: str) -> str:
     L = [BEGIN, "## 9. Generarea completă (buget „mic”)", "",
          f"Generat de `geocouple.bench.p2_full` din `{rel}/results.json`. Buget confirmat pe 2026-11-17: G0 = 200, "
          "G1 = 200, G2 = 30 (variante parametrice), toate joburile pe server; datele complete rămân pe server, "
-         "pe laptop doar `labels.json` (README §12).", "",
+         "pe laptop doar `labels.json` (docs/dev/design.md §12).", "",
          "| Familie | Planificate | OK | Eșuate | Cu câmpuri | Timp mediu / max [s] | RAM vârf [GiB] | Tet. fine max | Disc / eșantion [MiB] |",
          "| --- | --- | --- | --- | --- | --- | --- | --- | --- |"]
     for f, v in s["families"].items():
@@ -216,7 +216,7 @@ def run(per_kind: int = 2, sync: bool = True, tests: bool = True) -> Path:
     res["summary"] = summarize(rows, server, _dir_bytes(data_root), pytest, wall_h)
     (out / "results.json").write_text(json.dumps(res, indent=1, default=lambda o: o.tolist()
                                                  if hasattr(o, "tolist") else float(o)))
-    write_section(PROJECT_ROOT / "reports" / "P2.md", report_section(res, str(out.relative_to(PROJECT_ROOT))))
+    write_section(REPORTS_DIR / "P2.md", report_section(res, str(out.relative_to(PROJECT_ROOT))))
     from geocouple.viz import dashboard
     dashboard.build()
     log(f"{res['summary']['ok']}/{res['summary']['planned']} ok; results in {out}")

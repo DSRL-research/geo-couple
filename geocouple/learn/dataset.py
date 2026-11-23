@@ -1,4 +1,4 @@
-"""Setul de date pentru metode: eșantioane (etichete RLC + GeoGraph), split-urile E1/E2 și metricile (README §8.2).
+"""Setul de date pentru metode: eșantioane (etichete RLC + GeoGraph), split-urile E1/E2 și metricile (docs/dev/design.md §8.2).
 
 Doar JSON + numpy: rulează în orice mediu. Pe laptop, data/<set>/<familie>/<eșantion>/ are labels.json și graph.json
 (câmpurile complete stau pe server).
@@ -124,7 +124,7 @@ def summarize(samples: list[dict], test: list[str], preds: dict) -> dict:
 
 
 def physical_checks(pred: dict) -> dict:
-    """L și C simetrice, pozitiv definite; C diagonal dominantă (README §8.2, consistență fizică)."""
+    """L și C simetrice, pozitiv definite; C diagonal dominantă (docs/dev/design.md §8.2, consistență fizică)."""
     out = {}
     for key in ("L_nH", "C_fF"):
         M = pred.get(key)

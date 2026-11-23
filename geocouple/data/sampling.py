@@ -114,7 +114,7 @@ def full_assemblies(cfg: dict, stack: Stack) -> list[compose.Assembly]:
 
 
 def keeps_fields(asm: compose.Assembly, cfg: dict) -> bool:
-    """Fields (fine.vtkhdf with v_es, E, v_dc, J, A, B) only on a subset (README §12): every
+    """Fields (fine.vtkhdf with v_es, E, v_dc, J, A, B) only on a subset (docs/dev/design.md §12): every
     `full.fields.every`-th sample of each G0/G1 kind (index 0, every, 2*every, ...) and all of G2 (the test set)."""
     rule = cfg["full"].get("fields", {})
     if asm.family in rule.get("all_in", []):

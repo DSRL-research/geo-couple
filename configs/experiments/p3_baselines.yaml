@@ -1,4 +1,4 @@
-# P3 — baseline-uri B0–B5 pe E1 și E2 (README §7–§9). Plan scurtat (2026-11-18): un singur seed, ~100 de epoci
+# P3 — baseline-uri B0–B5 pe E1 și E2 (docs/dev/design.md §7–§9). Plan scurtat (2026-11-18): un singur seed, ~100 de epoci
 # pentru metodele pe câmp, câmpurile subeșantionate la 16–32k puncte per eșantion.
 name: p3_baselines
 seed: 0

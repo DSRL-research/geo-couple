@@ -99,7 +99,7 @@ def b1(run: Path):
             name = f"B1-{model}_E1" + ("" if float(frac) >= 1.0 else f"_f{frac}")
             save_preds(run, name, preds, meta)
             log(f"{name}: train {len(train)}, {meta['train_s']:.1f} s")
-        # E2: a parameter surrogate has no input for a composition it never saw (README §7: „nu poate compune")
+        # E2: a parameter surrogate has no input for a composition it never saw (docs/dev/design.md §7: „nu poate compune")
         save_preds(run, f"B1-{model}_E2", {n: None for n in splits["E2"]["test"]},
                    {"note": "nu poate compune: parametrii G2 nu au corespondent în G0/G1"})
 

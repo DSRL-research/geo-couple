@@ -23,7 +23,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from geocouple import PROJECT_ROOT
+from geocouple import PROJECT_ROOT, REPORTS_DIR
 from geocouple.geometry import compose
 from geocouple.geometry.gds_import import import_gds
 from geocouple.geometry.gds_synthetic import write_cells
@@ -156,7 +156,7 @@ def run(config_path: Path) -> Path:
     log(f"pytest: {results['pytest']['summary']}")
 
     from geocouple.bench.report_p1 import write_report
-    write_report(out, PROJECT_ROOT / "reports" / "P1.md")
+    write_report(out, REPORTS_DIR / "P1.md")
     from geocouple.viz import dashboard
     dashboard.build()
     log(f"results in {out}")

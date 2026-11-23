@@ -1,4 +1,4 @@
-"""P4 — S0, G1, A1 (README §7): superpoziție cu nucleu analitic și corecții învățate, asamblare fizică comună.
+"""P4 — S0, G1, A1 (docs/dev/design.md §7): superpoziție cu nucleu analitic și corecții învățate, asamblare fizică comună.
 
 Termeni de bază pe primitive (`superpos.features`, din B0): R[I], A[I, J] (L parțial cu curenții conductoarelor),
 P[I, J] (coeficienți de potențial, sarcină uniformă pe primitivă). Corecții învățate:

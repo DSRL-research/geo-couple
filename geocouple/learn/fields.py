@@ -1,6 +1,6 @@
-"""B2–B4 — metode pe câmp (README §7): MeshGraphNets (B2), Transolver (B3), GINO (B4). Prezic câmpurile pe celulele
+"""B2–B4 — metode pe câmp (docs/dev/design.md §7): MeshGraphNets (B2), Transolver (B3), GINO (B4). Prezic câmpurile pe celulele
 mesh-ului fine (E, J, B ale excitației canonice), iar R, L, C se obțin din ele prin aceleași formule de energie
-(README §6.1), deci sunt comparabile cu celelalte metode doar pe termenii conductorului excitat (primul cu porturi):
+(docs/dev/design.md §6.1), deci sunt comparabile cu celelalte metode doar pe termenii conductorului excitat (primul cu porturi):
 
     C_11 = ε0 ε_r ∫ |E|² dV          (conductorul 1 la 1 V, celelalte la 0)
     R    = 1 / ∫ |J|² / σ dV          (1 V între porturi)
@@ -103,7 +103,7 @@ def cell_arrays_shell(sample_dir: Path) -> dict:
 
 
 def energy_rlc(E: np.ndarray, J: np.ndarray, B: np.ndarray, a: dict, eps_r: float = 1.0) -> dict:
-    """R, L_11, C_11 of the excited conductor from cell fields (SI) — the energy formulas of README §6.1."""
+    """R, L_11, C_11 of the excited conductor from cell fields (SI) — the energy formulas of docs/dev/design.md §6.1."""
     vol = a["vol"]
     eps_r = a.get("eps_r", eps_r)
     c = EPS0 * eps_r * np.sum(np.sum(E[a["is_air"]] ** 2, axis=1) * vol[a["is_air"]])
@@ -418,7 +418,7 @@ def train_and_predict(method: str, train: list[dict], test: list[dict], cfg: dic
             pred = apply_constraints(pred, a)
             rlc = energy_rlc(pred[:, 0:3], pred[:, 3:6], pred[:, 6:9], a)
             res = {"rlc": rlc, "infer_s": time.perf_counter() - t1, "n_cells": int(a["n_cells"])}
-            if "fields" in a:  # field error (README §8.2): relative L2 of |E|, |J|, |B|, volume-weighted
+            if "fields" in a:  # field error (docs/dev/design.md §8.2): relative L2 of |E|, |J|, |B|, volume-weighted
                 res["field_l2"] = {}
                 for k, ch in enumerate(CHANNELS):
                     t = np.linalg.norm(a["fields"][:, 3 * k:3 * k + 3], axis=1)

@@ -1,4 +1,4 @@
-"""Import GDSII/OASIS → poligoane pe straturi → primitive extrudate pe stack (README §5.2).
+"""Import GDSII/OASIS → poligoane pe straturi → primitive extrudate pe stack (docs/dev/design.md §5.2).
 
 - Poligoanele de pe același strat se unesc (shapely), apoi fiecare componentă se descompune:
   rectiliniar → dreptunghiuri (felii orizontale, apoi unirea feliilor cu aceeași extindere în x) → noduri `bar`;

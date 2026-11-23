@@ -1,4 +1,4 @@
-"""B5 — GNN pe graful de primitive, doar cu muchii de contact (README §7, ablație: graful nostru fără non-localitate).
+"""B5 — GNN pe graful de primitive, doar cu muchii de contact (docs/dev/design.md §7, ablație: graful nostru fără non-localitate).
 
 - Noduri = primitive: tip, strat, log-parametri (cu mască), centroid și dimensiuni ale bbox-ului, rol de port.
 - Muchii = doar `contact` din GeoGraph (în ambele sensuri), cu deplasarea relativă dintre centroizi.

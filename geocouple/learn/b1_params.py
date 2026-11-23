@@ -1,4 +1,4 @@
-"""B1 — surrogate scalar pe parametri (README §7): exact clasa `Surrogate` din proiectul aval
+"""B1 — surrogate scalar pe parametri (docs/dev/design.md §7): exact clasa `Surrogate` din proiectul aval
 (`circuit_ml.ml.surrogates`, GP Matern 5/2 și ansamblu de 5 MLP, în spațiul log), importată fără modificări.
 
 Un surrogate per primitivă G0 (intrare: parametrii ei; stratul M1/M2 ca număr), ieșiri: R, L proprie, C proprie.

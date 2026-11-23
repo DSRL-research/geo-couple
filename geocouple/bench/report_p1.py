@@ -6,7 +6,7 @@ import json
 import sys
 from pathlib import Path
 
-from geocouple import PROJECT_ROOT
+from geocouple import PROJECT_ROOT, REPORTS_DIR
 
 
 def _ok(flag) -> str:
@@ -146,4 +146,4 @@ convergența referinței) — pornește doar după confirmare.
 
 
 if __name__ == "__main__":
-    write_report(Path(sys.argv[1]), PROJECT_ROOT / "reports" / "P1.md")
+    write_report(Path(sys.argv[1]), REPORTS_DIR / "P1.md")

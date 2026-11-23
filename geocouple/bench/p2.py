@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from geocouple import PROJECT_ROOT
+from geocouple import PROJECT_ROOT, REPORTS_DIR
 from geocouple.data.build import PipelineSpec
 from geocouple.data.sampling import sample_family
 from geocouple.data.simulate import run_sample
@@ -308,7 +308,7 @@ def run(config_path: Path) -> Path:
                                                  if hasattr(o, "tolist") else float(o)))
     log(f"pytest: {results['pytest']['summary']}")
     from geocouple.bench.report_p2 import write_report
-    write_report(out, PROJECT_ROOT / "reports" / "P2.md")
+    write_report(out, REPORTS_DIR / "P2.md")
     from geocouple.viz import dashboard
     dashboard.build()
     log(f"results in {out}")

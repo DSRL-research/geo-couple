@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from geocouple import PROJECT_ROOT
+from geocouple import PROJECT_ROOT, REPORTS_DIR
 from geocouple.learn import dataset as ds
 
 RUN = PROJECT_ROOT / "runs" / "p5_transfer"
@@ -320,7 +320,7 @@ def write_p5(res: dict) -> str:
           "- `runs/p5_transfer/latest/figures/fig6_e6_error_per_cell.png`, `fig6b_e6_error_vs_primitives.png` — figura 6 (E6, "
           "sintetic; celulele Cadence se adaugă când sunt exportate).", ""]
     md = "\n".join(L) + "\n"
-    (PROJECT_ROOT / "reports" / "P5.md").write_text(md)
+    (REPORTS_DIR / "P5.md").write_text(md)
     return md
 
 
@@ -406,7 +406,7 @@ def write_poc(res: dict, pytest: dict) -> str:
         for b, row in sorted(best.items()):
             L.append(f"| {b:.2f} | " + " | ".join(_pct(row[k], 3) for k in sorted(row)) + " |")
     L += ["", "## 4. Figuri", "",
-          "| Figură (README §8.3) | Fișier |", "| --- | --- |",
+          "| Figură (docs/dev/design.md §8.3) | Fișier |", "| --- | --- |",
           f"| 1. E1, curba de învățare | `{p3.relative_to(PROJECT_ROOT)}/figures/fig1_e1_learning_curve.png` |",
           f"| 2. E2, eroare vs. număr de primitive | `{p4.relative_to(PROJECT_ROOT)}/figures/fig2_e2_error_vs_primitives.png` |",
           f"| 3. E3, M_ij / C_ij vs. distanță, ablația pe prag | `{p4.relative_to(PROJECT_ROOT)}/figures/fig3_e3_mutual_vs_distance.png` |",
@@ -431,7 +431,7 @@ def write_poc(res: dict, pytest: dict) -> str:
           "mediană (FastHenry, B0), nu din FEM.",
           "6. **Bug-ul de solver (reparat, p2.3):** GAMG cu netezitorul implicit era un preconditioner nedefinit pe "
           "sistemul magnetostatic de ordinul 2; CG se oprea fără eroare și L ieșea prea mic (până la −21%). Reparat cu "
-          "netezitor SOR + verificarea convergenței; toate cele 430 de eșantioane au fost re-rezolvate (README §12).",
+          "netezitor SOR + verificarea convergenței; toate cele 430 de eșantioane au fost re-rezolvate (docs/dev/design.md §12).",
           "7. **G1 (GNN cu cuplaj)** e instabil între seed-uri la pragul implicit și ratează două criterii P4; A1 și S0 nu.",
           ("8. **Contextul învățat (G1, A1) vs. corecția pe perechi (S0):** pe G2 (compoziții generate ca la antrenare) "
            f"S0 e cea mai bună (C mutuale {m4('S0', 'C_mutual'):.1f}%, A1 {m4('A1', 'C_mutual'):.1f}%); pe layout-uri (G3) "
@@ -442,7 +442,7 @@ def write_poc(res: dict, pytest: dict) -> str:
            "Ordinea depinde de distanța față de distribuția de antrenare; de confirmat pe celulele Cadence."),
           "9. **Câmpurile** se păstrează doar pentru 1 din 4 eșantioane G0 / G1 și pentru G2 (P2, buget de disc).", ""]
     md = "\n".join(L) + "\n"
-    (PROJECT_ROOT / "reports" / "PoC.md").write_text(md)
+    (REPORTS_DIR / "PoC.md").write_text(md)
     return md
 
 

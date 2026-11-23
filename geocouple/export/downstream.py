@@ -1,4 +1,4 @@
-"""Export în contractul proiectului aval (README §6.2): câte un folder de model per primitivă G0 / generator G1.
+"""Export în contractul proiectului aval (docs/dev/design.md §6.2): câte un folder de model per primitivă G0 / generator G1.
 
 Fiecare folder conține: `<nume>.geo` (geometria parametrizată, cu `Include "params.txt";`, pentru vizualizare și
 verificările platformei), șabloanele GetDP (`*.pro`), `params.txt`, `model.yaml`, `solver_workflow.py` cu

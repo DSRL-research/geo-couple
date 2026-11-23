@@ -25,7 +25,7 @@ import numpy as np
 import plotly
 import plotly.graph_objects as go
 
-from geocouple import PROJECT_ROOT
+from geocouple import PROJECT_ROOT, REPORTS_DIR
 from geocouple.viz import style
 from geocouple.viz.mesh3d import field_slice, geometry_figure, primitive_surfaces, surfaces_from_vtkhdf
 
@@ -170,7 +170,7 @@ def latest_run(experiment: str) -> Path | None:
 
 
 def report_html(name: str) -> str:
-    p = PROJECT_ROOT / "reports" / name
+    p = REPORTS_DIR / name
     if not p.exists():
         return "<p class='sub'>Raportul nu există încă.</p>"
     return markdown.markdown(p.read_text(), extensions=["tables", "fenced_code"])
@@ -827,7 +827,7 @@ def poc_page(run: Path) -> tuple[str, bool]:
         if r is not None:
             figs.append(f"<div class='card'><h3>Figura {t}</h3>{_img(r / 'figures' / f, t)}</div>")
     body = (f"<div class='card report'>{report_html('PoC.md')}</div>"
-            "<h2>Figurile (README §8.3)</h2><div class='grid'>" + "".join(figs) + "</div>")
+            "<h2>Figurile (docs/dev/design.md §8.3)</h2><div class='grid'>" + "".join(figs) + "</div>")
     return body, True
 
 

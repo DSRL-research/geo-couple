@@ -1,4 +1,4 @@
-# Seturile de date (README §6.3). P2 rulează doar pilotul (`pilot`); numărul de eșantioane pentru `full` se fixează
+# Seturile de date (docs/dev/design.md §6.3). P2 rulează doar pilotul (`pilot`); numărul de eșantioane pentru `full` se fixează
 # după confirmarea bugetului de către utilizator. Eșantionare Sobol (scrambled, seed fix) pe intervalele de mai jos.
 name: train_v1
 seed: 0
@@ -14,7 +14,7 @@ G0:   # primitive: intervale (layer = listă de alegeri)
   corner:         {arm_a_um: [5, 100], arm_b_um: [5, 100], width_um: [0.5, 10], layer: [M1, M2]}
   via:            {width_um: [0.5, 4], layer: [V1]}
   spiral_segment: {radius_um: [5, 100], width_um: [0.5, 10], sweep_deg: [15, 180], layer: [M1, M2]}
-  ground_plane:   {length_um: [20, 200], width_um: [20, 200], layer: [M1]}   # ≤ 200 µm și arie ≤ 18 000 µm² (sampling.py): plafonul de 10⁶ tetraedre (README §12)
+  ground_plane:   {length_um: [20, 200], width_um: [20, 200], layer: [M1]}   # ≤ 200 µm și arie ≤ 18 000 µm² (sampling.py): plafonul de 10⁶ tetraedre (docs/dev/design.md §12)
 G1:   # generatoare: intervale ale argumentelor
   parallel_bars:  {length: [10, 200], width: [0.5, 10], gap: [0.5, 20]}
   bar_over_plane: {length: [10, 200], width: [0.5, 10]}

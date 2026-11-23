@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from geocouple import PROJECT_ROOT
+from geocouple import PROJECT_ROOT, REPORTS_DIR
 from geocouple.learn import dataset as ds
 
 QL = {"R": "R", "L_self": "L proprii", "C_self": "C proprii", "L_mutual": "L mutuale", "C_mutual": "C mutuale"}
@@ -329,7 +329,7 @@ def write_md(run: Path, res: dict) -> str:
           "- `figures/fig8_a1_attention.png` — harta de atenție A1 pe " + (f"`{res['attention']['name']}`" if res.get("attention") else "—") + ".", ""]
     L += ["## 6. Concluzii", ""] + res.get("conclusions", [])
     md = "\n".join(L) + "\n"
-    (PROJECT_ROOT / "reports" / "P4.md").write_text(md)
+    (REPORTS_DIR / "P4.md").write_text(md)
     return md
 
 

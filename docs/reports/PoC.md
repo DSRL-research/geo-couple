@@ -99,7 +99,7 @@ Generat automat de `geocouple.bench.report_p5` din `runs/`. Detaliile fiecărui 
 
 ## 4. Figuri
 
-| Figură (README §8.3) | Fișier |
+| Figură (docs/dev/design.md §8.3) | Fișier |
 | --- | --- |
 | 1. E1, curba de învățare | `runs/p3_baselines/20261119-192815/figures/fig1_e1_learning_curve.png` |
 | 2. E2, eroare vs. număr de primitive | `runs/p4_composition/20261120-134156/figures/fig2_e2_error_vs_primitives.png` |
@@ -117,7 +117,7 @@ Generat automat de `geocouple.bench.report_p5` din `runs/`. Detaliile fiecărui 
 3. **B2–B4 sub-antrenate:** un seed, CPU, ~36–90 de eșantioane cu câmpuri; pe E2 R / L proprii 70–74% (P3 v2). Concluziile despre metodele pe câmp sunt limitate de buget, nu de arhitectură.
 4. **Coada (p95) pe C mutuale** rămâne la ~20–35% pe G2 pentru toate variantele (P4), deși mediana e ~5%: câteva perechi (în special conductoare îndepărtate, cu C_ij mic, și plane de masă) dau erorile mari.
 5. **FastHenry / B0 pe curburi:** după corecția solverului, 41 de eșantioane (spirale, colțuri, meandre, lanțuri de via-uri) au L FEM la > 1% de FastHenry; abaterea e aceeași înainte și după, deci vine din modelele pe linia mediană (FastHenry, B0), nu din FEM.
-6. **Bug-ul de solver (reparat, p2.3):** GAMG cu netezitorul implicit era un preconditioner nedefinit pe sistemul magnetostatic de ordinul 2; CG se oprea fără eroare și L ieșea prea mic (până la −21%). Reparat cu netezitor SOR + verificarea convergenței; toate cele 430 de eșantioane au fost re-rezolvate (README §12).
+6. **Bug-ul de solver (reparat, p2.3):** GAMG cu netezitorul implicit era un preconditioner nedefinit pe sistemul magnetostatic de ordinul 2; CG se oprea fără eroare și L ieșea prea mic (până la −21%). Reparat cu netezitor SOR + verificarea convergenței; toate cele 430 de eșantioane au fost re-rezolvate (docs/dev/design.md §12).
 7. **G1 (GNN cu cuplaj)** e instabil între seed-uri la pragul implicit și ratează două criterii P4; A1 și S0 nu.
 8. **Contextul învățat (G1, A1) vs. corecția pe perechi (S0):** pe G2 (compoziții generate ca la antrenare) S0 e cea mai bună (C mutuale 5.4%, A1 5.9%); pe layout-uri (G3) corecția pe perechi nu se transferă (S0 C mutuale 13.6%, ≈ B0 13.0%), iar G1 / A1 da (7.3% / 8.4%); pe lanțurile lungi din G3 A1 e singura cu coada mică (p95 C mutuale 10.8%, S0 25.3%, G1 34.2%). Ordinea depinde de distanța față de distribuția de antrenare; de confirmat pe celulele Cadence.
 9. **Câmpurile** se păstrează doar pentru 1 din 4 eșantioane G0 / G1 și pentru G2 (P2, buget de disc).

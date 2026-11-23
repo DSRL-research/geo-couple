@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 import yaml
 
-from geocouple import PROJECT_ROOT
+from geocouple import PROJECT_ROOT, REPORTS_DIR
 from geocouple.learn import dataset as ds
 
 METHODS = ["B0", "B1-gp", "B1-mlp_ensemble", "B2", "B3", "B4", "B5"]
@@ -300,7 +300,7 @@ def write_md(run: Path, res: dict, acc: dict) -> str:
           "- **B0:** PEEC analitic pe liniile mediane (R = l/(σA) în rețea, L parțial Ruehli/Neumann, C din coeficienți de "
           "potențial), fără antrenare (`geocouple/learn/b0_peec.py`).",
           "- **B1:** `circuit_ml.ml.surrogates.Surrogate` (proiectul aval, neschimbat), GP și ansamblu MLP, câte unul pe "
-          "primitivă; pe E2 nu are intrare pentru o compoziție (neacoperit, cum prevede README §7).",
+          "primitivă; pe E2 nu are intrare pentru o compoziție (neacoperit, cum prevede docs/dev/design.md §7).",
           "- **B5:** GNN (Interaction Network) pe graful de primitive cu **doar muchii de contact**; R, L, C proprii ca sume de "
           "contribuții per primitivă; termenii mutuali din perechile de încapsulări de conductor.",
           "- **B2 / B3 / B4:** MeshGraphNets / Transolver / GINO pe centrele celulelor mesh-ului fine (16k puncte per eșantion "
@@ -311,8 +311,8 @@ def write_md(run: Path, res: dict, acc: dict) -> str:
              "(dielectric), J (conductorul excitat) și B (tot domeniul), plus 0,05 × MSE în spațiul asinh; 10% din "
              "eșantioanele de antrenare cu câmpuri pentru validare, early stopping cu răbdare de 40 de epoci, cel mult "
              "300 de epoci; se păstrează modelul cel mai bun pe validare. " if res.get("annex_v1") else "")
-          + "R, L, C ale conductorului excitat din câmpurile prezise prin formulele de energie (README §6.1); "
-          "R, L, C ale conductorului excitat din câmpurile prezise prin formulele de energie (README §6.1); "
+          + "R, L, C ale conductorului excitat din câmpurile prezise prin formulele de energie (docs/dev/design.md §6.1); "
+          "R, L, C ale conductorului excitat din câmpurile prezise prin formulele de energie (docs/dev/design.md §6.1); "
           "termenii mutuali nu rezultă dintr-o singură excitație (neacoperiți).", ""]
     for exp, title in (("E1", "E1 — primitive (G0 → G0)"), ("E2", "E2 — compunere (G0 + G1 → G2)")):
         L += [f"## {3 if exp == 'E1' else 4}. {title}", "",
@@ -336,7 +336,7 @@ def write_md(run: Path, res: dict, acc: dict) -> str:
     a1 = res.get("annex_v1") or {}
     if a1:
         L += ["## 5a. Anexă: rularea v1 (etichete P2 cu solverul vechi, pierdere asinh, 100 de epoci)", "",
-              f"Din `{a1['run']}`. Etichetele de atunci aveau L subestimat pe ~1 din 6 eșantioane (README §12, "
+              f"Din `{a1['run']}`. Etichetele de atunci aveau L subestimat pe ~1 din 6 eșantioane (docs/dev/design.md §12, "
               "solverul liniar); B2–B4 erau antrenate cu pierdere MSE în spațiul asinh, 100 de epoci, fără validare. "
               "Eroare față de etichetele de atunci, mediană / p95 [%]:", "",
               "| Experiment | Metodă | R | L proprii | C proprii |", "| --- | --- | --- | --- | --- |"]
@@ -385,7 +385,7 @@ def write_md(run: Path, res: dict, acc: dict) -> str:
     rc = res.get("rechecks", {})
     if rc:
         p0, p2 = rc.get("p0_acceptance"), rc.get("p2_full")
-        line = ("0. **Solverul liniar (README §12, SIM_VERSION p2.3).** Etichetele P2 aveau L subestimat pe ~1 din 6 "
+        line = ("0. **Solverul liniar (docs/dev/design.md §12, SIM_VERSION p2.3).** Etichetele P2 aveau L subestimat pe ~1 din 6 "
                 "eșantioane (GAMG nedefinit pe sistemul magnetostatic, CG oprit fără eroare); toate cele 430 s-au "
                 "re-rezolvat cu solverul reparat și verificarea convergenței. Reverificări:")
         if p0:
@@ -425,7 +425,7 @@ def write_md(run: Path, res: dict, acc: dict) -> str:
           "3. **B5 nu compune.** Fără muchii de cuplaj, GNN-ul pe contacte învață bine primitivele (E1), dar pe G2 erorile "
           "cresc cu numărul de primitive (figura 2), mai ales pe C și pe termenii mutuali — exact golul pe care îl țintesc "
           "S0 / G1 / A1 (P4).",
-          "4. **B1 nu poate compune** (README §7): un surrogate pe parametri nu are intrare pentru o compoziție nouă.",
+          "4. **B1 nu poate compune** (docs/dev/design.md §7): un surrogate pe parametri nu are intrare pentru o compoziție nouă.",
           "5. **Calitatea etichetelor pe barele lungi și subțiri.** Pe barele G0 ținute deoparte, B0 coincide cu "
           "FastHenry (criteriul de mai sus), dar FEM se abate de la ambele pe L: "
           + ", ".join(f"`{n}` {100 * v:+.1f}%" for n, v in sorted(res["b0_check"].get("vs_fasthenry", {})
@@ -435,7 +435,7 @@ def write_md(run: Path, res: dict, acc: dict) -> str:
           "6. **B0** e foarte bun pe R și L proprii (curent uniform, inductanțe parțiale exacte), dar grosier pe C cu plan de "
           "masă și pe C mutuale (o singură sarcină uniformă pe segment).", ""]
     md = "\n".join(L)
-    (PROJECT_ROOT / "reports" / "P3.md").write_text(md)
+    (REPORTS_DIR / "P3.md").write_text(md)
     return md
 
 

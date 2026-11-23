@@ -1,4 +1,4 @@
-"""B0 — formule analitice (README §7): R, L și C dintr-o descompunere PEEC grosieră a asamblării, fără învățare.
+"""B0 — formule analitice (docs/dev/design.md §7): R, L și C dintr-o descompunere PEEC grosieră a asamblării, fără învățare.
 
 - Fiecare primitivă devine segmente drepte pe linia ei mediană (secțiune w × t; via: w × w, între liniile mediane ale
   metalelor pe care le atinge, cu nod de racord pe linia metalului). Nodurile care coincid se unesc (contactele).

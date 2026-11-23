@@ -17,4 +17,4 @@ primitives:
     ranges:  {radius_um: [5.0, 100.0], width_um: [0.5, 10.0], sweep_deg: [15.0, 180.0], layer: [M1, M2]}
   ground_plane:
     nominal: {length_um: 60.0, width_um: 40.0, layer: M1}
-    ranges:  {length_um: [20.0, 200.0], width_um: [20.0, 200.0], layer: [M1]}   # ≤ 200 µm (README §12)
+    ranges:  {length_um: [20.0, 200.0], width_um: [20.0, 200.0], layer: [M1]}   # ≤ 200 µm (docs/dev/design.md §12)

@@ -6,7 +6,7 @@ import json
 import sys
 from pathlib import Path
 
-from geocouple import PROJECT_ROOT
+from geocouple import PROJECT_ROOT, REPORTS_DIR
 
 
 def _pct(x: float, digits: int = 2) -> str:
@@ -185,4 +185,4 @@ P1 (graf și mesh: compunere, GeoGraph, mesh coarse + rafinare ZZ, import GDS de
 
 
 if __name__ == "__main__":
-    write_report(Path(sys.argv[1]), PROJECT_ROOT / "reports" / "P0.md")
+    write_report(Path(sys.argv[1]), REPORTS_DIR / "P0.md")

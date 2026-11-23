@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 
-from geocouple import PROJECT_ROOT
+from geocouple import PROJECT_ROOT, REPORTS_DIR
 
 
 def _ok(flag) -> str:
@@ -184,4 +184,4 @@ _STATIC_TAIL = """## 7. Decizii și constatări
 
 
 if __name__ == "__main__":
-    write_report(Path(sys.argv[1]), PROJECT_ROOT / "reports" / "P2.md")
+    write_report(Path(sys.argv[1]), REPORTS_DIR / "P2.md")
