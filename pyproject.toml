@@ -4,20 +4,47 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "geocouple"
-version = "0.0.1"
-description = "PoC: modele de învățare pentru geometrii 3D și extracția RLC cvasistatică (Gmsh + GetDP)"
+version = "0.1.0"
+description = "Learning RLC extraction for 3D interconnect geometries composed of primitives, with Gmsh + GetDP FEM labels"
 requires-python = ">=3.11"
-dependencies = ["numpy", "scipy", "pyyaml", "gmsh>=4.13"]
+authors = [{ name = "Mihai Daian" }]
+keywords = ["interconnect", "RLC extraction", "finite elements", "graph neural networks", "GDS"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# core: geometry, GDS import, meshing (gmsh Python API), labels I/O. GetDP is an external binary (scripts/get_onelab.sh).
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pyyaml>=6.0",
+    "shapely>=2.0",
+    "matplotlib>=3.8",
+    "gmsh>=4.13",
+    "h5py>=3.10",
+    "jsonschema>=4.20",
+    "gdstk>=0.9",
+]
 
 [project.optional-dependencies]
-dev = ["pytest"]
+learn = ["scikit-learn>=1.4", "torch>=2.2"]          # B1, the local GPs, S0 / G1 / A1, B2–B5
+viz = ["plotly>=5.18", "markdown>=3.5", "pyvista>=0.43"]   # dashboard
+g3 = ["gdsfactory>=8.0"]                              # the synthetic G3 cells of P5
+dev = ["pytest>=8.0", "ruff>=0.6", "pre-commit>=3.5"]
+all = ["geocouple[learn,viz,g3,dev]"]
+
+[project.scripts]
+geocouple = "geocouple.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["geocouple*"]
 
 [tool.setuptools.package-data]
 "geocouple.physics" = ["templates/*.pro"]
+"geocouple.graph" = ["*.schema.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = ["fem: rulează Gmsh + GetDP (mai lent)"]
+
