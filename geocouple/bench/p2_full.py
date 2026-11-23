@@ -3,7 +3,7 @@
 Aduce rezultatele (doar rezumatele: labels.json cu R, L, C; datele complete rămân pe server), numără eșantioanele
 OK / eșuate, verifică L și C (simetrice, pozitiv definite), compară cu FastHenry / FastCap pe un subset, măsoară discul
 (server + laptop), rulează testele, scrie runs/p2_full/<stamp>/results.json, secțiunea „Generarea completă” din
-reports/P2.md și reconstruiește dashboard-ul.
+docs/reports/P2.md și reconstruiește dashboard-ul.
 
     python -m geocouple.bench.p2_full [--subset-per-kind 2] [--no-sync]
 """

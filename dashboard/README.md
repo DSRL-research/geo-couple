@@ -1,18 +1,16 @@
-# Dashboard de rezultate
+# Results dashboard
 
-Site static generat din `runs/` și `reports/`. Nicio valoare nu se scrie de mână: fiecare pagină citește
-`results.json`, câmpurile eșantionate (`fields/*.npz`) și mesh-urile (`*.msh`) din ultima rulare a experimentului.
+A static site generated from `runs/` and `docs/reports/`. No value is written by hand: every page reads the
+`results.json`, the sampled fields (`fields/*.npz`) and the meshes (`*.msh`) of the latest run of each step.
 
 ```bash
-cd ~/work/geo-couple
-.venv/bin/python -m geocouple.viz.dashboard serve          # build + http://localhost:8765/
-.venv/bin/python -m geocouple.viz.dashboard serve --port 9000
-.venv/bin/python -m geocouple.viz.dashboard build          # doar scrie dashboard/site/ (se poate deschide direct
-                                                           # dashboard/site/index.html în browser)
+geocouple dashboard serve               # build + http://localhost:8765/
+geocouple dashboard serve --port 9000
+geocouple dashboard build               # only writes dashboard/site/ (open dashboard/site/index.html directly)
 ```
 
-Conținut: o pagină de prezentare (stare de acceptanță per pas) și câte o pagină per pas (P0, P1, …) cu tabelele de
-acceptanță, graficele interactive (plotly, inclus local — funcționează offline), vederi 3D ale geometriilor și mesh-urilor
-(rotire / zoom cu mouse-ul) și raportul pasului. Runner-ele pașilor reconstruiesc dashboard-ul la final.
+Content: an overview page (acceptance per step) and one page per step (P0, P1, …) with the acceptance tables,
+interactive plots (plotly, bundled: works offline), 3D views of the geometries and meshes, and the step's report.
+The step runners rebuild the dashboard when they finish.
 
-`dashboard/site/` este generat și nu se versionează.
+`dashboard/site/` is generated and not versioned.

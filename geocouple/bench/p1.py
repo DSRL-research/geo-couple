@@ -5,7 +5,7 @@
 Pentru fiecare instanță din G1, G2 și G3 sintetic: asamblare (sau import GDS) → mesh coarse din graf → estimator ZZ →
 mesh fine → GeoGraph (validat) → verificări (conformitate, plafon de tetraedre, nod pe fiecare tetraedru, matricea C
 pe coarse și fine). Scrie runs/<name>/<timestamp>/ (configurație, results.json, pytest.xml, câte un folder per
-instanță cu mesh-uri și graph.json), reports/P1.md și reconstruiește dashboard-ul.
+instanță cu mesh-uri și graph.json), docs/reports/P1.md și reconstruiește dashboard-ul.
 """
 
 from __future__ import annotations

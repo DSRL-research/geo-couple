@@ -3,7 +3,7 @@
     python -m geocouple.bench.p0 configs/experiments/p0_acceptance.yaml
 
 Scrie în runs/<name>/<timestamp>/: configurația (experiment + stack) copiată, results.json, rezultatele pytest
-(pytest.xml) și regenerează reports/P0.md din aceste fișiere.
+(pytest.xml) și regenerează docs/reports/P0.md din aceste fișiere.
 """
 
 from __future__ import annotations

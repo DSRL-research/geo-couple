@@ -1,4 +1,4 @@
-"""P5 și raportul final: reports/P5.md (G3, E6, E4, E5) și reports/PoC.md (P0–P5, din runs/), figurile 4, 5, 6 și
+"""P5 și raportul final: docs/reports/P5.md (G3, E6, E4, E5) și docs/reports/PoC.md (P0–P5, din runs/), figurile 4, 5, 6 și
 paginile de dashboard. Niciun număr nu e scris de mână: totul vine din runs/*/results.json și runs/p5_transfer/."""
 
 from __future__ import annotations
@@ -323,15 +323,15 @@ def write_p5(res: dict) -> str:
 
 
 def write_poc(res: dict, pytest: dict) -> str:
-    """reports/PoC.md: the three questions, every step's acceptance, the main tables, the limitations."""
+    """docs/reports/PoC.md: the three questions, every step's acceptance, the main tables, the limitations."""
     p0, p1, p3, p4 = (_latest(e) for e in ("p0_acceptance", "p1_acceptance", "p3_baselines", "p4_composition"))
     p2 = _latest("p2_full")
     r0, r1, r3, r4 = (json.loads((p / "results.json").read_text()) for p in (p0, p1, p3, p4))
     r2 = json.loads((p2 / "results.json").read_text())
     e6 = res["e6"]
     L = ["# geocouple — raportul PoC", "",
-         "Generat automat de `geocouple.bench.report_p5` din `runs/`. Detaliile fiecărui pas sunt în `reports/P0.md` … "
-         "`reports/P5.md`; tabelele de mai jos sunt extrase din aceleași rezultate.", "",
+         "Generat automat de `geocouple.bench.report_p5` din `runs/`. Detaliile fiecărui pas sunt în `docs/reports/P0.md` … "
+         "`docs/reports/P5.md`; tabelele de mai jos sunt extrase din aceleași rezultate.", "",
          "## 1. Răspunsurile", ""]
     v4, e2 = r4["variants"], r4["E2"]
 
@@ -365,7 +365,7 @@ def write_poc(res: dict, pytest: dict) -> str:
     s2 = r2["summary"]
     L.append(f"| P2 | date generate (p2.3): {s2['ok']}/{s2['planned']}; L, C SPD {s2['spd']['pass']}/{s2['spd']['n']} | "
              f"{'DA' if s2['ok'] == s2['planned'] else 'NU'} |")
-    L.append(f"| P5 | G3 rezolvat: {len(res['g3'])}/{res['g3_planned']}; E6 pe {len(e6)} metode; reports/PoC.md din runs/ | "
+    L.append(f"| P5 | G3 rezolvat: {len(res['g3'])}/{res['g3_planned']}; E6 pe {len(e6)} metode; docs/reports/PoC.md din runs/ | "
              f"{'DA' if len(res['g3']) == res['g3_planned'] and len(e6) == len(METHODS) else 'NU'} |")
     L.append(f"| P5 | teste pytest: {pytest['summary']} | {'DA' if pytest['returncode'] == 0 else 'NU'} |")
     L += ["", "## 3. Tabelele principale", "", "### E1 (G0 → G0), P3", "",

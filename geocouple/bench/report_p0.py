@@ -1,4 +1,4 @@
-"""Generează reports/P0.md din runs/p0_acceptance/<stamp>/results.json. Textul e fix; toate numerele vin din fișier."""
+"""Generează docs/reports/P0.md din runs/p0_acceptance/<stamp>/results.json. Textul e fix; toate numerele vin din fișier."""
 
 from __future__ import annotations
 

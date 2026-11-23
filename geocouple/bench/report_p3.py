@@ -1,5 +1,5 @@
 """P3 — metrici, tabele E1/E2, figuri (curbă de învățare, eroare vs. număr de primitive, paritate), raport
-reports/P3.md și dashboard, din runs/p3_baselines/<stamp>/preds/. Niciun număr nu se scrie de mână."""
+docs/reports/P3.md și dashboard, din runs/p3_baselines/<stamp>/preds/. Niciun număr nu se scrie de mână."""
 
 from __future__ import annotations
 

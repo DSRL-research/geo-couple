@@ -1,6 +1,6 @@
 # geocouple — raportul PoC
 
-Generat automat de `geocouple.bench.report_p5` din `runs/`. Detaliile fiecărui pas sunt în `reports/P0.md` … `reports/P5.md`; tabelele de mai jos sunt extrase din aceleași rezultate.
+Generat automat de `geocouple.bench.report_p5` din `runs/`. Detaliile fiecărui pas sunt în `docs/reports/P0.md` … `docs/reports/P5.md`; tabelele de mai jos sunt extrase din aceleași rezultate.
 
 ## 1. Răspunsurile
 
@@ -38,7 +38,7 @@ Generat automat de `geocouple.bench.report_p5` din `runs/`. Detaliile fiecărui 
 | P4 | consistency | DA |
 | P4 | tests_green | DA |
 | P2 | date generate (p2.3): 430/430; L, C SPD 430/430 | DA |
-| P5 | G3 rezolvat: 24/24; E6 pe 5 metode; reports/PoC.md din runs/ | DA |
+| P5 | G3 rezolvat: 24/24; E6 pe 5 metode; docs/reports/PoC.md din runs/ | DA |
 | P5 | teste pytest: 70 passed, 1 skipped in 107.98s (0:01:47) | DA |
 
 ## 3. Tabelele principale

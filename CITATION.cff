@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use geocouple, please cite it as below."
+title: "geocouple: learning RLC extraction for 3D interconnect geometries composed of primitives"
+version: 0.1.0
+type: software
+authors:
+  - family-names: Daian
+    given-names: Mihai
+keywords:
+  - interconnect
+  - RLC extraction
+  - finite element method
+  - graph neural networks
+  - GDS

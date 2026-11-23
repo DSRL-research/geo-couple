@@ -6,7 +6,7 @@
     python -m geocouple.bench.p5 e6                    # B5, S0, G1, A1 pe G3 (mediul cu torch; 3 seed-uri)
     python -m geocouple.bench.p5 e4
     python -m geocouple.bench.p5 e5                    # FEM vs. mărimea mesh-ului (2 eșantioane G2)
-    python -m geocouple.bench.p5 report                # reports/P5.md, reports/PoC.md, dashboard
+    python -m geocouple.bench.p5 report                # docs/reports/P5.md, docs/reports/PoC.md, dashboard
 """
 
 from __future__ import annotations

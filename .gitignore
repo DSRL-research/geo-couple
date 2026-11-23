@@ -9,3 +9,4 @@ dashboard/site/
 dashboard/artifact/
 /export/
 configs/remote/gpu.yaml
+/models/

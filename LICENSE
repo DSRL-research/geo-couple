@@ -1,0 +1,8 @@
+License not chosen yet.
+
+Until a license is added here, no permission is granted to use, copy, modify or distribute this software beyond
+what applicable law allows.
+
+Note for the choice: geocouple calls GetDP and Gmsh (GPL) as separate programs and through the gmsh Python module,
+and uses FastHenry / FastCap (their own licenses) as optional external binaries. None of them is redistributed in
+this repository.

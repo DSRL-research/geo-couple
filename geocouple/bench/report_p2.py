@@ -1,4 +1,4 @@
-"""Generează reports/P2.md din runs/p2_pilot/<stamp>/results.json. Textul e fix; toate numerele vin din fișier."""
+"""Generează docs/reports/P2.md din runs/p2_pilot/<stamp>/results.json. Textul e fix; toate numerele vin din fișier."""
 
 from __future__ import annotations
 

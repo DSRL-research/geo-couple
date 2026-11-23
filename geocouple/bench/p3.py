@@ -5,7 +5,7 @@
     python -m geocouple.bench.p3 b1        # MLP / GP pe parametri (mediul cu scikit-learn)
     python -m geocouple.bench.p3 b5        # GNN pe graful de primitive, doar muchii de contact (torch)
     python -m geocouple.bench.p3 fields-collect   # B2–B4: predicțiile aduse de pe server (fields_server.py)
-    python -m geocouple.bench.p3 report    # metrici, tabele E1/E2, figuri, reports/P3.md, dashboard
+    python -m geocouple.bench.p3 report    # metrici, tabele E1/E2, figuri, docs/reports/P3.md, dashboard
 
 Predicțiile: preds/<metodă>_<experiment>[_f<fracțiune>].json = {eșantion: {R_ohm, L_nH, C_fF}} (None = neprezis).
 """

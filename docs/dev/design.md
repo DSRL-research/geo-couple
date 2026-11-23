@@ -122,7 +122,7 @@ geocouple/
       views                 colorare pe primitivă, eroare pe muchie, hartă de atenție
   data/                     generat (nu se versionează)
   runs/                     rezultate experimente (nu se versionează)
-  reports/                  P0.md … P5.md, raportul final PoC
+  docs/reports/                  P0.md … P5.md, raportul final PoC
   tests/
 ```
 
@@ -286,7 +286,7 @@ fără titluri decorative.
 | P2 Date | export în contractul aval, rulare, cache, stocare VTKHDF + graf + matrici, verificare FastHenry/FastCap | G0, G1, G2 generate; convergența referinței verificată; buget de date confirmat de utilizator |
 | P3 Baseline-uri | B0–B5 pe E1 și E2 | tabelele E1/E2 complete; B0 și B1 reproduse corect |
 | P4 Variantele noastre | S0, G1, A1 pe E2 și E3, cu ablații | răspuns clar la întrebările 1 și 2, cu figurile 2, 3, 7 |
-| P5 Scală, transfer, raport | E4, E5, G3 cu gdsfactory, apoi celule Cadence (E6), toate figurile | `reports/PoC.md` cu toate tabelele și figurile, generat din `runs/` |
+| P5 Scală, transfer, raport | E4, E5, G3 cu gdsfactory, apoi celule Cadence (E6), toate figurile | `docs/reports/PoC.md` cu toate tabelele și figurile, generat din `runs/` |
 
 Celulele reale din Cadence intră abia în P5, ca test. Importul GDS se scrie din P1, dar pe celule sintetice.
 
@@ -338,16 +338,16 @@ Răspunsurile utilizatorului la secțiunea 10 și deciziile tehnice din P0:
 - **Domeniul exterior (aprobat):** cub de aer + înveliș cubic de transformare la infinit, implementat ca **material
   anizotrop echivalent** K = det(F) F⁻¹F⁻ᵀ (aceeași aplicație ca `VolRectShell`), pe straturi de prisme obținute prin
   scalarea suprafeței cubului din centru. Jacobianele native `VolSphShell` / `VolRectShell` din GetDP 4.0 dau erori mari
-  pe acest tip de mesh (detalii și cifre în `reports/P0.md`). Implementarea: `geocouple/physics/templates/common.pro` și
+  pe acest tip de mesh (detalii și cifre în `docs/reports/P0.md`). Implementarea: `geocouple/physics/templates/common.pro` și
   `geocouple/geometry/model.py`.
 - **GPU:** există pe un server separat. Pașii care au nevoie de GPU vor rula printr-un worker la distanță (vezi
   `TODO.md`); tot ce nu are nevoie de GPU rămâne pe localhost. Codul de antrenare/inferență se scrie de acum ca job
   separabil: configurație + date pe disc la intrare, rezultate pe disc la ieșire.
-- **Pagina de rezultate:** `dashboard/` — site static generat din `runs/` și `reports/` (vezi `dashboard/README.md`).
+- **Pagina de rezultate:** `dashboard/` — site static generat din `runs/` și `docs/reports/` (vezi `dashboard/README.md`).
 - **Etichetele de referință (P2):** pe mesh-ul fine, v_es și A folosesc elemente ierarhice de ordinul 2
   (`BF_Node_2E`); pe coarse, ordinul 1 (perechile coarse/fine din E4). Sistemele se rezolvă cu CG + multigrid algebric
   (PETSc GAMG). Mesh-ul 3D: Delaunay + optimizare Gmsh și Netgen, cu prag minim de calitate. În magnetostatică,
-  conductoarele neexcitate fac parte din domeniu (material nemagnetic). Detalii și cifre în `reports/P2.md`.
+  conductoarele neexcitate fac parte din domeniu (material nemagnetic). Detalii și cifre în `docs/reports/P2.md`.
 - **Export aval:** `python -m geocouple.export.downstream` scrie modelele în `export/downstream/` (nu în proiectul
   aval); un model se folosește în platformă copiind folderul în `~/work/demo_circuit/models/`.
 - **Worker la distanță (2026-11-03):** serverul partajat `<user>@<server>` (adresa în `configs/remote/gpu.yaml`, neversionat) (24 fire, 123 GiB RAM,

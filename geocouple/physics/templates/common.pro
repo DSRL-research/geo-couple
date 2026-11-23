@@ -14,7 +14,7 @@ Function {
   // VolRectShell din GetDP. Pentru F = dx'/dx, laplacianul devine div(K grad), K = det(F) F^-1 F^-T:
   //   K = R_int (R_ext - R_int) / (R_ext - R)^2 · [I + g (q e^T + e q^T) + g^2 q q^T],
   //   g = (R_ext - 2R) / R,  q = (x - c) / (x_a - c_a),  e = versorul axei a.
-  // (Jacobianul VolRectShell din GetDP 4.0 dă pe acest caz o energie de ~30 ori prea mare; vezi reports/P0.md.)
+  // (Jacobianul VolRectShell din GetDP 4.0 dă pe acest caz o energie de ~30 ori prea mare; vezi docs/reports/P0.md.)
   dX[] = X[] - C_x;  dY[] = Y[] - C_y;  dZ[] = Z[] - C_z;
   kc[] = R_int * (R_ext - R_int) / (R_ext - $1)^2;
   kg[] = (R_ext - 2 * $1) / $1;

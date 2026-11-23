@@ -1,4 +1,4 @@
-"""Dashboard static de rezultate, generat din runs/ și reports/ (nicio valoare scrisă de mână).
+"""Dashboard static de rezultate, generat din runs/ și docs/reports/ (nicio valoare scrisă de mână).
 
     python -m geocouple.viz.dashboard build            # scrie dashboard/site/
     python -m geocouple.viz.dashboard serve [--port N] # build + server local pe http://localhost:N
@@ -813,7 +813,7 @@ def p5_page(run: Path) -> tuple[str, bool]:
 
 
 def poc_page(run: Path) -> tuple[str, bool]:
-    """Synthesis: reports/PoC.md and the main figures of every step."""
+    """Synthesis: docs/reports/PoC.md and the main figures of every step."""
     figs = []
     for exp, f, t in (("p3_baselines", "fig1_e1_learning_curve.png", "1 · E1, curba de învățare"),
                       ("p4_composition", "fig2_e2_error_vs_primitives.png", "2 · E2, eroare vs. primitive"),

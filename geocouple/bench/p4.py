@@ -4,7 +4,7 @@
     python -m geocouple.bench.p4 submit    # un job `train` per variantă (toate seed-urile) pe server
     python -m geocouple.bench.p4 local VAR # o variantă aici (depanare)
     python -m geocouple.bench.p4 collect   # aduce predicțiile în preds/<variantă>_s<seed>.json
-    python -m geocouple.bench.p4 report    # reports/P4.md, figuri, dashboard
+    python -m geocouple.bench.p4 report    # docs/reports/P4.md, figuri, dashboard
 """
 
 from __future__ import annotations

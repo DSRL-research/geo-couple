@@ -1,26 +1,27 @@
-# Worker la distanță — șablon. Copiază în configs/remote/gpu.yaml (nu se versionează) și completează.
-# Conexiunea folosește SSH cu cheie (fără parolă); datele de autentificare NU se scriu aici (stau în ~/.ssh).
-# Arhitectura și regulile pentru serverul partajat: docs/workers.md. Valorile omise iau valorile implicite din
+# Remote worker — template. Copy to configs/remote/gpu.yaml (not versioned) and fill in.
+# The connection is SSH with a key (no password); credentials are never written here (they live in ~/.ssh).
+# Architecture and the shared-server rules: docs/workers.md. Keys left out take the defaults of
 # geocouple/workers/config.py.
-ssh_host: <utilizator>@<adresa>       # sau un alias din ~/.ssh/config
-remote_root: geo-couple               # relativ la home-ul de pe server; nimic nu se scrie în afara lui
+ssh_host: <user>@<host>               # or an alias from ~/.ssh/config
+remote_root: geo-couple               # relative to the remote home; nothing is written outside it
 tmux_session: geocouple-worker
-worker:                               # citit de daemonul de pe server
-  max_cores_frac: 0.5                 # cel mult 50% din nuclee ...
-  reserve_cores: 2                    # ... și cel mult nuclee − sarcina altora − rezervă
-  max_mem_frac: 0.5                   # cel mult 50% din RAM ...
-  mem_margin_gb: 16                   # ... și cel mult MemAvailable − marjă
-  busy_load_frac: 0.6                 # sarcina altora peste 60% din nuclee → nu pornește joburi noi
-  min_avail_gb: 24                    # MemAvailable sub prag → retragere
+torch_path: null                      # extra sys.path entry for training jobs when torch lives outside the venv
+worker:                               # read by the daemon on the server
+  max_cores_frac: 0.5                 # at most 50% of the cores ...
+  reserve_cores: 2                    # ... and at most cores − others' load − reserve
+  max_mem_frac: 0.5                   # at most 50% of the RAM ...
+  mem_margin_gb: 16                   # ... and at most MemAvailable − margin
+  busy_load_frac: 0.6                 # others' load above 60% of the cores → no new jobs
+  min_avail_gb: 24                    # MemAvailable below this → back off
   max_parallel_jobs: 8
   nice: 15
   ionice_class: 3                     # idle
-  mem_limit_factor: 1.5               # plafon dur per job = rezervare × factor (systemd-run MemoryMax + watchdog)
-  disk_quota_gb: 15                   # tot folderul de pe server
-  min_disk_free_gb: 20                # discul e partajat
-  keep_done_h: 24                     # joburile aduse pe laptop se șterg după
+  mem_limit_factor: 1.5               # hard per-job limit = reservation × factor (systemd-run MemoryMax + watchdog)
+  disk_quota_gb: 15                   # the whole remote folder
+  min_disk_free_gb: 20                # the disk is shared
+  keep_done_h: 24                     # jobs fetched to the laptop are deleted after this
   gpus_allowed: [0]
-routing:                              # planificatorul de pe laptop
+routing:                              # the scheduler on the laptop
   default_where: auto                 # auto | local | remote
-  local_max_mem_gb: 2.5               # estimări mai mari merg pe server
+  local_max_mem_gb: 2.5               # larger estimates go to the server
   local_mem_margin_gb: 1.5

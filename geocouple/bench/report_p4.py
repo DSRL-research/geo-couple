@@ -1,4 +1,4 @@
-"""P4 — tabele E2 / E3, figurile 2, 3, 7 și harta de atenție A1, reports/P4.md, dashboard. Din
+"""P4 — tabele E2 / E3, figurile 2, 3, 7 și harta de atenție A1, docs/reports/P4.md, dashboard. Din
 runs/p4_composition/<stamp>/preds/<variantă>_s<seed>.json; B0 și B5 din ultima rulare P3 (aceleași split-uri E2)."""
 
 from __future__ import annotations
