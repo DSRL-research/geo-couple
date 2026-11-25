@@ -6,7 +6,7 @@ Generat automat de `geocouple.bench.report_p5` din `runs/`. Detaliile fiecărui 
 
 1. **Generalizează compunerea?** Da, când modelul pornește de la nucleul analitic pe primitive. Pe G2 (nevăzut, compoziții de până la 25 de primitive), S0: C proprii 4.4%, C mutuale 5.4%, L proprii 0.08% (B0: 11.4% / 13.5% / 0.13%; B5, GNN fără nucleu: 86% / 570%). Pe layout-uri (G3, gdsfactory): S0 C proprii 14.0%, C mutuale 13.6%; A1 6.0% / 8.4%; B0 13.4% / 13.0%.
 2. **Contează muchiile non-locale?** Da: fără termeni pereche dincolo de vecinătate, C mutuale pe G2 e ~100% (doar contacte); cu nucleul analitic pe muchie, eroarea scade la câteva procente, iar fără nucleu (G1noK) rămâne ~40–50% (P4, E3). Muchiile de cuplaj sunt necesare; nucleul fizic pe muchie face cea mai mare parte din muncă.
-3. **Ce costă?** FEM ~345 s / eșantion (mediană, un fir), timp ∝ N^1.28, memorie ∝ N^0.88; inferența S0 / A1 durează 0.23 / 1.09 ms pe celulă (≥ 10⁵ × mai rapid). Date: 430 de simulări pentru antrenare + test; E4: datele coarse reduc costul la aceeași eroare (secțiunea 4).
+3. **Ce costă?** FEM ~345 s / eșantion (mediană, un fir), timp ∝ N^1.28, memorie ∝ N^0.88 (cu punctul de 10⁶, N estimat: N^1.30 / N^0.88; cea mai mare rulare, ~10⁶ tetraedre: 33.5 h, 21.6 GiB); inferența S0 / A1 durează 0.23 / 1.09 ms pe celulă (≥ 10⁵ × mai rapid). Date: 430 de simulări pentru antrenare + test; E4: datele coarse reduc costul la aceeași eroare (secțiunea 4).
 
 ## 2. Criterii de acceptanță pe pași
 
@@ -39,7 +39,7 @@ Generat automat de `geocouple.bench.report_p5` din `runs/`. Detaliile fiecărui 
 | P4 | tests_green | DA |
 | P2 | date generate (p2.3): 430/430; L, C SPD 430/430 | DA |
 | P5 | G3 rezolvat: 24/24; E6 pe 5 metode; docs/reports/PoC.md din runs/ | DA |
-| P5 | teste pytest: 70 passed, 1 skipped in 107.98s (0:01:47) | DA |
+| P5 | teste pytest: 97 passed in 142.19s (0:02:22) | DA |
 
 ## 3. Tabelele principale
 
@@ -121,4 +121,5 @@ Generat automat de `geocouple.bench.report_p5` din `runs/`. Detaliile fiecărui 
 7. **G1 (GNN cu cuplaj)** e instabil între seed-uri la pragul implicit și ratează două criterii P4; A1 și S0 nu.
 8. **Contextul învățat (G1, A1) vs. corecția pe perechi (S0):** pe G2 (compoziții generate ca la antrenare) S0 e cea mai bună (C mutuale 5.4%, A1 5.9%); pe layout-uri (G3) corecția pe perechi nu se transferă (S0 C mutuale 13.6%, ≈ B0 13.0%), iar G1 / A1 da (7.3% / 8.4%); pe lanțurile lungi din G3 A1 e singura cu coada mică (p95 C mutuale 10.8%, S0 25.3%, G1 34.2%). Ordinea depinde de distanța față de distribuția de antrenare; de confirmat pe celulele Cadence.
 9. **Câmpurile** se păstrează doar pentru 1 din 4 eșantioane G0 / G1 și pentru G2 (P2, buget de disc).
+10. **E5 la 10⁶ tetraedre (`bus_0003`):** rularea s-a terminat, dar rezultatul a fost pierdut (șters de curățarea worker-ului înainte de sincronizare, din cauza unui marker `fetched` rămas de la prima rulare; bug reparat, cu test de regresie). În E5 intră doar timpul și memoria din log, cu N estimat (10⁶); L și C la 10⁶ lipsesc (`configs/bench/e5_log_points.yaml`).
 

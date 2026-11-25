@@ -105,13 +105,13 @@ def compute() -> dict:
     from geocouple.bench.p5_eval import e5_collect
     e5 = e5_collect()
     fem = [r for r in e5["fem"] if r["wall_s"] and r["fine_tets"]]
-    fits = {}
-    for key in ("wall_s", "peak_mib"):
-        pts = [(math_log(r["fine_tets"]), math_log(r[key])) for r in fem if r.get(key)]
-        if len(pts) > 5:
-            a, b = np.polyfit([p[0] for p in pts], [p[1] for p in pts], 1)
-            fits[key] = {"exponent": float(a), "coef": float(np.exp(b)), "n": len(pts)}
-    res["e5"] = {"fem": fem, "fits": fits}
+    log_points = e5_log_points()
+    est = [{"name": p["name"], "family": p["family"], "fine_tets": p["fine_tets_est"], "wall_s": p["wall_s"],
+            "peak_mib": p["peak_mib"]} for p in log_points]
+    sweep = sorted({p["name"] for p in log_points})
+    res["e5"] = {"fem": fem, "fits": _fits(fem), "fits_with_estimated": _fits(fem + est), "log_points": log_points,
+                 "sweep_fits": {n: {"without": _fits([r for r in fem if r.get("name") == n], 3),
+                                    "with": _fits([r for r in fem + est if r.get("name") == n], 3)} for n in sweep}}
     from geocouple.bench.p5_eval import e5_mesh_results
     mesh_rows = e5_mesh_results()
     if mesh_rows:
@@ -128,12 +128,30 @@ def compute() -> dict:
         res["e5"]["mesh"] = out
     from geocouple.bench.p5_eval import E5_NAMES, E5_TARGETS, e5_failures
     fails = {(f["name"], f["target"]): f["error"] for f in e5_failures()}
-    have = {(r["name"], r["target"]) for r in (res["e5"].get("mesh") or [])}
+    have = {(r["name"], r["target"]) for r in (res["e5"].get("mesh") or [])} | {(p["name"], p["target"]) for p in log_points}
     res["e5"]["missing"] = [{"name": n, "target": t, "reason": fails.get((n, t), "încă rulează pe server la generarea raportului")}
                             for n in E5_NAMES for t in E5_TARGETS if (n, t) not in have]
     # model inference (P4 / E6, ms per sample) and FEM time on G2
     res["e5"]["infer_ms"] = {m: v["infer_ms"] for m, v in e6.items()}
     return res
+
+
+def e5_log_points() -> list[dict]:
+    """E5 runs known only from the worker log (configs/bench/e5_log_points.yaml): estimated N, time, memory."""
+    import yaml
+    f = PROJECT_ROOT / "configs" / "bench" / "e5_log_points.yaml"
+    return (yaml.safe_load(f.read_text()) or {}).get("points", []) if f.exists() else []
+
+
+def _fits(rows: list[dict], min_points: int = 6) -> dict:
+    """log-log fits of time and peak memory vs. fine tetrahedra."""
+    fits = {}
+    for key in ("wall_s", "peak_mib"):
+        pts = [(math_log(r["fine_tets"]), math_log(r[key])) for r in rows if r.get(key)]
+        if len(pts) >= min_points:
+            a, b = np.polyfit([p[0] for p in pts], [p[1] for p in pts], 1)
+            fits[key] = {"exponent": float(a), "coef": float(np.exp(b)), "n": len(pts)}
+    return fits
 
 
 def math_log(x):
@@ -170,6 +188,12 @@ def figures(res: dict):
             axs[0].loglog([r["fine_tets"] for r in rr], [r["wall_s"] for r in rr], "o", ms=3, color=c, label=fam)
             pm = [r for r in rr if r.get("peak_mib")]
             axs[1].loglog([r["fine_tets"] for r in pm], [r["peak_mib"] / 1024 for r in pm], "o", ms=3, color=c, label=fam)
+    for p in res["e5"].get("log_points", []):
+        lab = f"{p['name']} @ 10⁶: N estimat, rezultat pierdut (timp, memorie din log)"
+        axs[0].loglog([p["fine_tets_est"]], [p["wall_s"]], marker="*", ms=13, ls="none", mfc="none", mec="#B3261E",
+                      mew=1.6, label=lab)
+        axs[1].loglog([p["fine_tets_est"]], [p["peak_mib"] / 1024], marker="*", ms=13, ls="none", mfc="none",
+                      mec="#B3261E", mew=1.6, label=lab)
     for ax, key, lab in ((axs[0], "wall_s", "timp FEM / eșantion [s]"), (axs[1], "peak_mib", "memorie vârf [GiB]")):
         f = res["e5"]["fits"].get(key)
         if f:
@@ -279,10 +303,18 @@ def write_p5(res: dict) -> str:
     L += ["", "## 4. E5 — scalare", "",
           f"FEM (toate cele {len(e5['fem'])} de rulări p2.3: G0–G3, server și laptop), timp și memorie vs. tetraedrele "
           "mesh-ului fine, ajustare log-log:", ""]
+    fw = e5.get("fits_with_estimated", {})
     for key, lab in (("wall_s", "timp"), ("peak_mib", "memorie vârf")):
         f = e5["fits"].get(key)
         if f:
-            L.append(f"- {lab} ∝ N^{f['exponent']:.2f} (n = {f['n']}).")
+            extra = (f"; cu punctul estimat de 10⁶ (¹): ∝ N^{fw[key]['exponent']:.2f} (n = {fw[key]['n']})"
+                     if e5.get("log_points") and key in fw else "")
+            L.append(f"- {lab} ∝ N^{f['exponent']:.2f} (n = {f['n']}){extra}.")
+    for n, sf in e5.get("sweep_fits", {}).items():
+        if sf["without"] and sf["with"]:
+            L.append(f"- doar `{n}` (sweep-ul de mesh): timp ∝ N^{sf['without']['wall_s']['exponent']:.2f} fără punctul "
+                     f"estimat, N^{sf['with']['wall_s']['exponent']:.2f} cu el; memorie ∝ "
+                     f"N^{sf['without']['peak_mib']['exponent']:.2f} → N^{sf['with']['peak_mib']['exponent']:.2f}.")
     L += ["", "Inferența modelelor (G3, ms / celulă, independentă de mesh): "
           + ", ".join(f"{LABEL[m]} {v:.2f}" for m, v in e5.get("infer_ms", {}).items()) + ".", ""]
     if e5.get("mesh"):
@@ -290,7 +322,17 @@ def write_p5(res: dict) -> str:
               "| Eșantion | Țintă | Tet. fine | Timp [s] | L proprii [%] | C proprii [%] |", "| --- | --- | --- | --- | --- | --- |"]
         L += [f"| `{r['name']}` | {r['target']:,} | {r['fine_tets']:,} | {r['wall_s']:.0f} | {_pct(r['L_vs_finest'], 3)} | "
               f"{_pct(r['C_vs_finest'], 3)} |" for r in e5["mesh"]]
+        L += [f"| `{p['name']}` | {p['target']:,} | ~{p['fine_tets_est']:,}¹ | {p['wall_s']:.0f}¹ | —¹ | —¹ |"
+              for p in e5.get("log_points", [])]
         L += ["", "Referința fiecărui eșantion este mesh-ul lui cel mai fin rezolvat."]
+    for p in e5.get("log_points", []):
+        L += ["", f"¹ `{p['name']}` @ {p['target']:,}: **N estimat, rezultat pierdut, doar timp și memorie din log.** "
+              f"Rularea s-a terminat pe server ({p['wall_s'] / 3600:.1f} h, vârf {p['peak_mib'] / 1024:.1f} GiB; job "
+              f"`{p['job']}`), dar rezultatul a fost șters de curățarea worker-ului înainte de sincronizare: jobul repornit "
+              "păstra marker-ul `fetched` al primei rulări (oprită de limita de timp). N = estimarea planificatorului "
+              "(10⁶), nu numărul măsurat; L și C nu există. Bug-ul e reparat (`geocouple/workers/daemon.py`: markerele se "
+              "șterg la repornire, iar curățarea numără de la terminarea jobului; test de regresie în "
+              "`tests/test_workers.py`). Datele punctului: `configs/bench/e5_log_points.yaml`."]
     if e5.get("missing"):
         L += ["", "Neincluse în tabel:", ""] + [f"- `{r['name']}` @ {r['target']:,}: {r['reason']}" for r in e5["missing"]]
     def mm(m, q):
@@ -354,7 +396,11 @@ def write_poc(res: dict, pytest: dict) -> str:
           "~40–50% (P4, E3). Muchiile de cuplaj sunt necesare; nucleul fizic pe muchie face cea mai mare parte din muncă.",
           f"3. **Ce costă?** FEM ~{np.median([r['wall_s'] for r in res['e5']['fem']]):.0f} s / eșantion (mediană, un fir), "
           f"timp ∝ N^{res['e5']['fits'].get('wall_s', {}).get('exponent', float('nan')):.2f}, memorie ∝ "
-          f"N^{res['e5']['fits'].get('peak_mib', {}).get('exponent', float('nan')):.2f}; inferența S0 / A1 durează "
+          f"N^{res['e5']['fits'].get('peak_mib', {}).get('exponent', float('nan')):.2f}"
+          + (f" (cu punctul de 10⁶, N estimat: N^{res['e5']['fits_with_estimated']['wall_s']['exponent']:.2f} / "
+             f"N^{res['e5']['fits_with_estimated']['peak_mib']['exponent']:.2f}; cea mai mare rulare, ~10⁶ tetraedre: "
+             f"{res['e5']['log_points'][0]['wall_s'] / 3600:.1f} h, {res['e5']['log_points'][0]['peak_mib'] / 1024:.1f} GiB)"
+             if res["e5"].get("log_points") else "") + "; inferența S0 / A1 durează "
           f"{res['e5']['infer_ms'].get('S0', float('nan')):.2f} / {res['e5']['infer_ms'].get('A1', float('nan')):.2f} ms "
           "pe celulă (≥ 10⁵ × mai rapid). Date: 430 de simulări pentru antrenare + test; E4: datele coarse reduc "
           "costul la aceeași eroare (secțiunea 4).", "",
@@ -438,7 +484,11 @@ def write_poc(res: dict, pytest: dict) -> str:
            f"singura cu coada mică (p95 C mutuale {_pct(e6['A1']['long_short']['long']['C_mutual_p95'], 1)}%, S0 "
            f"{_pct(e6['S0']['long_short']['long']['C_mutual_p95'], 1)}%, G1 {_pct(e6['G1']['long_short']['long']['C_mutual_p95'], 1)}%). "
            "Ordinea depinde de distanța față de distribuția de antrenare; de confirmat pe celulele Cadence."),
-          "9. **Câmpurile** se păstrează doar pentru 1 din 4 eșantioane G0 / G1 și pentru G2 (P2, buget de disc).", ""]
+          "9. **Câmpurile** se păstrează doar pentru 1 din 4 eșantioane G0 / G1 și pentru G2 (P2, buget de disc).",
+          *(["10. **E5 la 10⁶ tetraedre (`bus_0003`):** rularea s-a terminat, dar rezultatul a fost pierdut (șters de "
+             "curățarea worker-ului înainte de sincronizare, din cauza unui marker `fetched` rămas de la prima rulare; "
+             "bug reparat, cu test de regresie). În E5 intră doar timpul și memoria din log, cu N estimat (10⁶); L și C "
+             "la 10⁶ lipsesc (`configs/bench/e5_log_points.yaml`)."] if res["e5"].get("log_points") else []), ""]
     md = "\n".join(L) + "\n"
     (REPORTS_DIR / "PoC.md").write_text(md)
     return md

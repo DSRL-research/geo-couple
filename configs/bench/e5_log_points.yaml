@@ -1,0 +1,15 @@
+# E5 points known only from the worker log: the run finished, its result (labels.json) was lost.
+# bus_0003 @ 10^6: finished on the server on 2026-11-24 16:29 (second run, 48 h limit), then deleted by the worker's
+# cleanup before any sync: the job still carried the `fetched` marker of its first, timed-out run (bug fixed in
+# geocouple/workers/daemon.py, tests/test_workers.py::test_requeued_job_is_not_deleted_before_a_new_sync).
+# N is the planner's estimate (job.yaml fine_tets_est), not the measured tetrahedron count; L / C are unknown.
+points:
+  - name: bus_0003
+    family: G2
+    target: 1000000
+    fine_tets_est: 1000000
+    wall_s: 120714
+    peak_mib: 22146
+    job: bc0255e607ddda2c
+    finished: "2026-11-24T16:29:24"
+    source: "server logs/daemon.log: 'bc0255e607ddda2c: done in 120714 s, peak 22146 MiB'"
