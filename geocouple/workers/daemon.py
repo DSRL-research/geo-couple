@@ -30,6 +30,55 @@ from geocouple.workers.config import DEFAULTS
 _LOG = logging.getLogger(__name__)
 
 STATES = ("pending", "running", "done", "failed")
+# state markers written into a job folder after it finished (by the laptop's sync); they describe one run of the
+# job and must not travel with it into the next run
+STATE_MARKERS = ("fetched",)
+
+
+def clear_markers(d: Path) -> None:
+    for m in STATE_MARKERS:
+        (d / m).unlink(missing_ok=True)
+
+
+def finished_at(d: Path) -> float:
+    """When the job in folder d finished (run.json worker.finished; the folder's mtime if that is missing)."""
+    try:
+        run = json.loads((d / "result" / "run.json").read_text())
+        return dt.datetime.fromisoformat(run["worker"]["finished"]).timestamp()
+    except (OSError, ValueError, KeyError, TypeError):
+        return d.stat().st_mtime
+
+
+def removable(d: Path, keep_h: float, t: float | None = None) -> bool:
+    """A finished job may be deleted once it was fetched after it finished, and keep_h hours have passed since both.
+
+    A `fetched` marker older than the finish belongs to an earlier run of the same job (fetched, then requeued):
+    the new result has not been fetched yet and must stay."""
+    f = d / "fetched"
+    if not f.exists():
+        return False
+    done, got = finished_at(d), f.stat().st_mtime
+    if got < done:
+        return False
+    return (time.time() if t is None else t) - max(done, got) > keep_h * 3600
+
+
+def requeue(root: Path, jid: str, timeout_s: float | None = None) -> Path:
+    """Put a failed job back in pending/ (fresh run: no result, no state markers; retries reset)."""
+    q = Path(root).expanduser().resolve() / "queue"
+    d = q / "failed" / jid
+    if not d.exists():
+        raise FileNotFoundError(f"{jid} is not in queue/failed")
+    job = yaml.safe_load((d / "job.yaml").read_text())
+    job["retries"] = 0
+    job.setdefault("history", []).append({"time": now(), "reason": "requeued by hand"})
+    if timeout_s:
+        job["timeout_s"] = float(timeout_s)
+    (d / "job.yaml").write_text(yaml.safe_dump(job, sort_keys=False))
+    shutil.rmtree(d / "result", ignore_errors=True)
+    clear_markers(d)
+    os.rename(d, q / "pending" / jid)
+    return q / "pending" / jid
 PAGE = os.sysconf("SC_PAGE_SIZE")
 
 
@@ -195,6 +244,7 @@ class Worker:
             job["resources"]["mem_gb"] = round(job["resources"]["mem_gb"] * mem_factor, 2)
             (d / "job.yaml").write_text(yaml.safe_dump(job, sort_keys=False))
             shutil.rmtree(d / "result", ignore_errors=True)
+            clear_markers(d)
             os.rename(d, self.q / "pending" / d.name)
             log(f"{d.name}: {reason} -> pending (retry {job['retries']}, mem {job['resources']['mem_gb']} GB)")
         else:
@@ -208,6 +258,7 @@ class Worker:
             os.rename(d, target)  # atomic claim
         except OSError:
             return False
+        clear_markers(target)  # a job moved back to pending/ by hand may still carry the markers of its last run
         c, res = self.cfg, job["resources"]
         code = self.root / "code" / job["code_hash"]
         if not code.exists():
@@ -280,14 +331,10 @@ class Worker:
 
     def cleanup(self):
         c = self.cfg
-        for d in self.q.joinpath("done").iterdir():
-            f = d / "fetched"
-            if f.exists() and time.time() - f.stat().st_mtime > c["keep_done_h"] * 3600:
-                shutil.rmtree(d, ignore_errors=True)
-        for d in self.q.joinpath("failed").iterdir():
-            f = d / "fetched"
-            if f.exists() and time.time() - f.stat().st_mtime > c["keep_done_h"] * 3600:
-                shutil.rmtree(d, ignore_errors=True)
+        for s in ("done", "failed"):
+            for d in self.q.joinpath(s).iterdir():
+                if removable(d, c["keep_done_h"]):
+                    shutil.rmtree(d, ignore_errors=True)
         for d in (self.root / "scratch").iterdir():
             if d.name not in self.running:
                 shutil.rmtree(d, ignore_errors=True)
@@ -441,10 +488,16 @@ def main():
     _logging.setup()
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", type=Path, default=Path("~/geo-couple"))
-    ap.add_argument("cmd", choices=["run", "status"])
+    ap.add_argument("cmd", choices=["run", "status", "requeue"])
+    ap.add_argument("job_id", nargs="?", help="requeue: id of a job in queue/failed")
+    ap.add_argument("--timeout-s", type=float, help="requeue: new timeout for the job")
     a = ap.parse_args()
     if a.cmd == "run":
         Worker(a.root).loop()
+    elif a.cmd == "requeue":
+        if not a.job_id:
+            ap.error("requeue needs a job id")
+        print(requeue(a.root, a.job_id, a.timeout_s))
     else:
         print(json.dumps(status(a.root), default=str))
 

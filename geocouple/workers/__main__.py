@@ -44,6 +44,9 @@ def main():
     s.add_argument("--families", nargs="*")
     s.add_argument("--where", choices=["auto", "local", "remote"])
     s.add_argument("--wait", action="store_true")
+    r = sub.add_parser("requeue", help="move a failed job back to pending on the server")
+    r.add_argument("job_id")
+    r.add_argument("--timeout-s", type=float)
     f = sub.add_parser("submit-full")
     f.add_argument("--families", nargs="*")
     f.add_argument("--dry-run", action="store_true")
@@ -108,6 +111,9 @@ def main():
         return
 
     r = Remote(cfg)
+    if a.cmd == "requeue":
+        print(Remote(cfg).requeue(a.job_id, a.timeout_s))
+        return
     if a.cmd == "deploy":
         print(r.deploy())
     elif a.cmd == "start":

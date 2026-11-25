@@ -87,6 +87,11 @@ class Remote:
         self.ssh(f"touch {self.root}/STOP")
         return "stop requested (the daemon exits after the running jobs)"
 
+    def requeue(self, job_id: str, timeout_s: float | None = None) -> str:
+        """Move a failed job back to pending on the server (fresh run, state markers cleared)."""
+        extra = f" --timeout-s {float(timeout_s)}" if timeout_s else ""
+        return self.ssh(self.daemon(f"requeue {shlex.quote(job_id)}{extra}"), timeout=120).stdout.strip()
+
     def status(self) -> dict:
         return json.loads(self.ssh(self.daemon("status"), timeout=120).stdout)
 
